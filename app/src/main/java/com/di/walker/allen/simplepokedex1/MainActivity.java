@@ -173,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         try {
 
 
+
             istance.searchForPokemon(pokemonQuery).enqueue(this);
         }catch (RuntimeException e){
             Toast.makeText(this,"chiamata network failed",Toast.LENGTH_SHORT).show();
