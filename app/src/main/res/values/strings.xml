@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">SimplePokedex1</string>
+    <string name="inserisci_nome_o_numero">inserisci nome o numero</string>
+    <string name="search">Search</string>
+    <string name="snorlax">snorlax</string>
+    <string name="pokemonimage">pokemonImage</string>
+    <string name="title_mon_list">mons</string>
+    <string name="title_mon_detail">mon Detail</string>
+    <string name="pokemonCount">811</string>
+</resources>
