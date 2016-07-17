@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void bindViews(){
+        Log.d("deb", "bindViews: before");
         searchBox=(EditText)findViewById(R.id.searchBox);
         searchButton=(Button)findViewById(R.id.searchButton);
         gotoButton=(Button)findViewById(R.id.listButton);
