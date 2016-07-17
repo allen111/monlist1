@@ -58,6 +58,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         Log.d("deb", "onCreate: before enquee");
 
         call.enqueue(this);
+        Log.d("deb", "onCreate: after enquee");
 
     }
 
