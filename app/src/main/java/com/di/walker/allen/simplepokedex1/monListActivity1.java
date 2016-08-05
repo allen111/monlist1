@@ -22,7 +22,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class monListActivity1 extends AppCompatActivity implements Callback<PokeList> {
+public class monListActivity1 extends AppCompatActivity implements Callback<PokeList>,PokeListAdapter.OnCardClikListner {
     private RecyclerView recView;
     private ArrayList<Result> result;
     private PokeListAdapter adapter;
@@ -70,6 +70,8 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         result = jsonResponse.getResults();
         adapter = new PokeListAdapter(result);
         recView.setAdapter(adapter);
+        adapter.setOnCardClickListner(this);
+
         progressBar.setVisibility(View.GONE);
         recView.setVisibility(View.VISIBLE);
     }
@@ -80,5 +82,9 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         Toast.makeText(this,"chiamata network failed",Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void OnCardClicked(View view, int position) {
+        Log.d("PKM", "OnCardClicked: "+position);
+    }
 }
 //TODO click e immagini sulla lista?
