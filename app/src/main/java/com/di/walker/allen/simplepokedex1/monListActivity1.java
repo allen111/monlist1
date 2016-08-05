@@ -1,5 +1,6 @@
 package com.di.walker.allen.simplepokedex1;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -85,6 +86,10 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     @Override
     public void OnCardClicked(View view, int position) {
         Log.d("PKM", "OnCardClicked: "+position);
+        Intent i =new Intent(this,DetailActivity.class);
+        int pos=position+1;
+        i.putExtra("PokeNum",""+pos);
+        startActivity(i);
     }
 }
 //TODO click e immagini sulla lista?

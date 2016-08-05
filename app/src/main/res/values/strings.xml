@@ -7,4 +7,5 @@
     <string name="title_mon_list">mons</string>
     <string name="title_mon_detail">mon Detail</string>
     <string name="pokemonCount">811</string>
+    <string name="title_activity_detail">DetailActivity</string>
 </resources>
