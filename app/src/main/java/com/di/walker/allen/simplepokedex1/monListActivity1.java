@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -37,14 +40,26 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class monListActivity1 extends AppCompatActivity implements Callback<PokeList>,PokeListAdapter.OnCardClikListner {
     private RecyclerView recView;
     private ArrayList<Result> result;
+    private ArrayList<String> list;
     private PokeListAdapter adapter;
     private ProgressBar progressBar;
+    private boolean ready=false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mon_list1);
         Log.d("deb", "onCreate: before bind");
         bindViews();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.list_menu, menu);
+
+        // return true so that the menu pop up is opened
+        return true;
     }
 
     private void bindViews(){
@@ -93,12 +108,16 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 
         PokeList jsonResponse = response.body();
         result = jsonResponse.getResults();
+
         adapter = new PokeListAdapter(result);
         recView.setAdapter(adapter);
+
         adapter.setOnCardClickListner(this);
 
         progressBar.setVisibility(View.GONE);
         recView.setVisibility(View.VISIBLE);
+        ready=true;
+
     }
 
     @Override
@@ -164,5 +183,27 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
             return activeNetwork != null &&
                     activeNetwork.isConnectedOrConnecting();
         }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d("deb4", "onOptionsItemSelected: ");
+        if(!ready){
+            return false;
+        }
+        Log.d("size", "lenght"+result.size());
+      //  for (int i=0;i<10;i++) {
+            Log.d("res", "onResponse: "+result.get(50).getName());
+
+        //}
+//
+//        for (String string : list) {
+//            if (string.matches("(?i)(bea).*")) {
+//                Log.d("SRE1", "OnSearch: " + string);
+//            }
+//        }
+        //TODO metti tutto in un thread uffaaaaa....
+        return true;
+    }
 }
-//TODO immagini sulla lista?
+//TODO immagini sulla lista? tweak cache

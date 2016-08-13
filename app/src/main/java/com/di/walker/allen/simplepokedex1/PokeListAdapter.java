@@ -31,7 +31,7 @@ public class PokeListAdapter extends RecyclerView.Adapter<PokeListAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.pk_name.setText(pokeList.get(position).getName());
         holder.pk_url.setText(pokeList.get(position).getUrl());
-        holder.pk_num.setText("#: " + (position + 1));//TODO check number or shift
+        holder.pk_num.setText("#: " + (position + 1));
         holder.cardView.setOnClickListener(new View.OnClickListener(){
 
             @Override
