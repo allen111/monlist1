@@ -35,6 +35,13 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
     private LinearLayout pkm_det;
     private ProgressBar progBar;
 
+    private TextView pkmWeight;
+    private TextView pkmHp;
+    private TextView pkmAttack;
+    private TextView pkmDefense;
+    private TextView pkmSpeed;
+    private TextView pkmTypes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +66,12 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
         pokeImg =(ImageView)findViewById(R.id.pkmD_img);
         pkm_det=(LinearLayout)findViewById(R.id.pkmD_detail);
         progBar=(ProgressBar) findViewById(R.id.progBar_d);
+        pkmWeight=(TextView)findViewById(R.id.pkmn_weight);
+        pkmHp=(TextView)findViewById(R.id.pkmn_hp);
+        pkmAttack=(TextView)findViewById(R.id.pkmn_attack);
+        pkmDefense=(TextView)findViewById(R.id.pkmn_defense);
+        pkmSpeed=(TextView)findViewById(R.id.pkmn_speed);
+        pkmTypes=(TextView)findViewById(R.id.pkmn_types);
         Log.d("deb2", "bindViews: ");
 
 
@@ -104,28 +117,29 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
         }
         int num=result.getId();
         pokeName.setText(result.getName() +" #"+ num);
-//        pkmWeight.setText("Weight: " + result.getWeight());
-//        for (Stat s : result.getStats()) {
-//            switch (s.getStat().getName()) {
-//                case "hp":
-//                    pkmHp.setText("HP: " + s.getBaseStat());
-//                    break;
-//                case "attack":
-//                    pkmAttack.setText("Attack: " + s.getBaseStat());
-//                    break;
-//                case "defense":
-//                    pkmDefense.setText("Defense: " + s.getBaseStat());
-//                    break;
-//                case "speed":
-//                    pkmSpeed.setText("Speed: " + s.getBaseStat());
-//                    break;
-//            }
-//        }
-//        String types="Types: ";
-//        for (Type t : result.getTypes()){
-//            types=types+" "+t.getType().getName();
-//        }
-//        pkmTypes.setText(types);
+        pkmWeight.setText("Weight: " + result.getWeight());
+        for (Stat s : result.getStats()) {
+            switch (s.getStat().getName()) {
+                case "hp":
+                    pkmHp.setText("HP: " + s.getBaseStat());
+                    break;
+                case "attack":
+                    pkmAttack.setText("Attack: " + s.getBaseStat());
+                    break;
+                case "defense":
+                    pkmDefense.setText("Defense: " + s.getBaseStat());
+                    break;
+
+                case "speed":
+                    pkmSpeed.setText("Speed: " + s.getBaseStat());
+                    break;
+            }
+        }
+        String types="Types: ";
+        for (Type t : result.getTypes()){
+            types=types+" "+t.getType().getName();
+        }
+        pkmTypes.setText(types);
         Picasso.with(this).load(result.getSprites().getFrontDefault()).into(pokeImg);
 
         progBar.setVisibility(View.GONE);

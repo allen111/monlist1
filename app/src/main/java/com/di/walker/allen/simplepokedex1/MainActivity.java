@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (v.getId()==R.id.searchButton){
+            Log.d("TAG", "onClick: i clicked");
             startSearch();
 
         }else{
@@ -104,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onResponse(Call<Pokemon> call, Response<Pokemon> response) {
         Pokemon result=response.body();
+        Log.d("deb3", "onResponse:Main  "+response.code());
         if (result==null){
             Toast.makeText(this,"nome errato",Toast.LENGTH_SHORT).show();
             return;
