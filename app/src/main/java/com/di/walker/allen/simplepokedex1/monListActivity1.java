@@ -44,12 +44,14 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     private PokeListAdapter adapter;
     private ProgressBar progressBar;
     private boolean ready=false;
+//    private SearchTask serTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mon_list1);
         Log.d("deb", "onCreate: before bind");
+
         bindViews();
     }
 
@@ -191,17 +193,11 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         if(!ready){
             return false;
         }
-        Log.d("size", "lenght"+result.size());
-      //  for (int i=0;i<10;i++) {
-            Log.d("res", "onResponse: "+result.get(50).getName());
+        MyParams q=new MyParams(result,"bu");
+        new SearchTask().execute(q);
 
-        //}
-//
-//        for (String string : list) {
-//            if (string.matches("(?i)(bea).*")) {
-//                Log.d("SRE1", "OnSearch: " + string);
-//            }
-//        }
+
+
         //TODO metti tutto in un thread uffaaaaa....
         return true;
     }
