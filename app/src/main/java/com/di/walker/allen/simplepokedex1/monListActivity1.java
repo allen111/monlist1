@@ -44,7 +44,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     private PokeListAdapter adapter;
     private ProgressBar progressBar;
     private boolean ready=false;
-//    private SearchTask serTask;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.list_menu, menu);
 
-        // return true so that the menu pop up is opened
+
         return true;
     }
 
