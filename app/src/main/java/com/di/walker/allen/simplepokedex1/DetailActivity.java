@@ -154,3 +154,4 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
     }
 
 }
+//TODO implement caching pls

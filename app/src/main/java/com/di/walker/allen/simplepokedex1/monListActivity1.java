@@ -42,7 +42,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class monListActivity1 extends AppCompatActivity implements Callback<PokeList>,PokeListAdapter.OnCardClikListner,  android.widget.SearchView.OnQueryTextListener {
+public class monListActivity1 extends AppCompatActivity implements Callback<PokeList>,PokeListAdapter.OnCardClikListner,  android.widget.SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
     private RecyclerView recView;
     private ArrayList<Result> result;
     private ArrayList<Result> SearchResult;
@@ -50,7 +50,9 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     private PokeListAdapter adapter;
     private ProgressBar progressBar;
     private boolean ready = false;
+    private boolean searching = false;
     private android.widget.SearchView searchView;
+
 
 
     @Override
@@ -78,21 +80,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 
 
 
-        MenuItemCompat.setOnActionExpandListener(searchMenuItem,new MenuItemCompat.OnActionExpandListener() {
-
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                //Do whatever you want
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                adapter = new PokeListAdapter(result);
-                recView.setAdapter(adapter);
-                return true;
-            }
-        });
+        MenuItemCompat.setOnActionExpandListener(searchMenuItem,this);
 
 
 
@@ -179,10 +167,20 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 
     @Override
     public void OnCardClicked(View view, int position) {
-        Log.d("PKM", "OnCardClicked: " + position);
+        Log.d("deb4", "OnCardClicked: " + position);
+        //String num=
         Intent i = new Intent(this, DetailActivity.class);
         int pos = position + 1;
         i.putExtra("PokeNum", "" + pos);
+        if(searching){
+            String url=SearchResult.get(position).getUrl();
+            String[] nums= url.split("/");
+            String num= nums[nums.length-1];
+            Log.d("deb4", "OnCardClicked: "+num);
+            i.putExtra("PokeNum", "" + num);
+            startActivity(i);
+            return;
+        }
         startActivity(i);
     }
 
@@ -239,6 +237,8 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         SearchResult=mp.rets;
         adapter = new PokeListAdapter(SearchResult);
         recView.setAdapter(adapter);
+        adapter.setOnCardClickListner(this);
+        searching=true;
 
         return true;
     }
@@ -250,8 +250,21 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 
 
 
+    @Override
+    public boolean onMenuItemActionExpand(MenuItem item) {
+        //Do whatever you want
+        return true;
+    }
 
-
-
+    @Override
+    public boolean onMenuItemActionCollapse(MenuItem item) {
+        adapter = new PokeListAdapter(result);
+        recView.setAdapter(adapter);
+        adapter.setOnCardClickListner(this);
+        searching=false;
+        return true;
+    }
 }
 //TODO immagini sulla lista? tweak cache
+
+//TODO  search middle string, clear searchVIew trash
