@@ -1,13 +1,17 @@
 package com.di.walker.allen.simplepokedex1;
 
+import android.app.SearchManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -60,6 +64,18 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.list_menu, menu);
 
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+
+        android.widget.SearchView searchView = (android.widget.SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search11));
+        // Assumes current activity is the searchable activity
+        Log.d("SERD", "onCreateOptionsMenu:middle ");
+        searchView.setSearchableInfo(searchManager.getSearchableInfo( new ComponentName(this, SearchActivity.class)));
+        Log.d("SERD", "onCreateOptionsMenu: aftr");
+        searchView.setIconifiedByDefault(false);
+        searchView.setSubmitButtonEnabled(true);
+
+
 
         return true;
     }
@@ -90,7 +106,6 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         PokeListInterface pokelist=retrofit.create(PokeListInterface.class);
-
 
         Call<PokeList> call = pokelist.GetListPokemon();
         Log.d("deb", "onCreate: before enquee");
@@ -125,7 +140,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     @Override
     public void onFailure(Call<PokeList> call, Throwable t) {
         if(t.getMessage()==null){
-            Log.d("deb", "onFailure: idk");
+            Log.d("deb", "onFailure: ");
         }else{
             Log.d("deb",t.getMessage());
         }
@@ -143,7 +158,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     }
 
 
-    Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
+    private Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
         @Override
         public okhttp3.Response intercept(Chain chain) throws IOException {
 
@@ -176,8 +191,6 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 
 
 
-
-
         public  boolean isNetworkAvailable(Context context) {
             ConnectivityManager cm =
                     (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -189,13 +202,13 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d("deb4", "onOptionsItemSelected: ");
-        if(!ready){
-            return false;
-        }
-        MyParams q=new MyParams(result,"bu");
-        new SearchTask().execute(q);
-
+//        Log.d("deb4", "onOptionsItemSelected: ");
+//        if(!ready){
+//            return false;
+//        }
+//        MyParams q=new MyParams(result,"bu");
+//        new SearchTask().execute(q);
+        onSearchRequested();
 
 
         //TODO metti tutto in un thread uffaaaaa....
