@@ -244,8 +244,20 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     }
 
     @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
+    public boolean onQueryTextChange(String query) {
+        Log.d("sr2", "onQueryTextSubmit: " + query);
+
+        MyParams mp=new MyParams(result,query,new ArrayList<Result>());
+        new SearchTask().execute(mp);
+        SearchResult=mp.rets;
+        adapter = new PokeListAdapter(SearchResult);
+        recView.setAdapter(adapter);
+        adapter.setOnCardClickListner(this);
+        searching=true;
+
+        return true;
+
+
     }
 
 
@@ -267,4 +279,4 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 }
 //TODO immagini sulla lista? tweak cache
 
-//TODO  search middle string, clear searchVIew trash
+//TODO clear searchVIew trash, minor check perche non compaiono quando tastiera up serached

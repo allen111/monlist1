@@ -14,8 +14,8 @@ public class SearchTask extends AsyncTask<MyParams,Long,MyParams>{
 
 
         for (Result x : params[0].rLis) {
-            String q= params[0].query;
-            if (x.getName().matches("(?i)("+q+").*")) {
+            String q= params[0].query.toLowerCase();
+            if (x.getName().matches("(.*)("+q+").*")) {
                 Log.d("SRE1", "OnSearch: " + x.getName());
                 params[0].rets.add(x);
             }
