@@ -19,11 +19,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".monListActivity1" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".SearchActivity"
-
-
+                android:value=".monListActivity1"
                 />
 
         </activity>
@@ -47,12 +48,10 @@
             </intent-filter>
 
 
-            <meta-data
-            android:name="android.app.default_searchable"
-            android:value=".monListActivity1"
-            android:resource="@xml/searchable"
-                />
+
         </activity>
+
+        <meta-data android:name="android.app.default_searchable" android:value=".SearchActivity" android:resource="@xml/searchable" />
     </application>
 
 </manifest>

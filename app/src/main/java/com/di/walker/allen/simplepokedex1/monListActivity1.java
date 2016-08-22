@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,13 +42,15 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class monListActivity1 extends AppCompatActivity implements Callback<PokeList>,PokeListAdapter.OnCardClikListner {
+public class monListActivity1 extends AppCompatActivity implements Callback<PokeList>,PokeListAdapter.OnCardClikListner,  android.widget.SearchView.OnQueryTextListener {
     private RecyclerView recView;
     private ArrayList<Result> result;
+    private ArrayList<Result> SearchResult;
     private ArrayList<String> list;
     private PokeListAdapter adapter;
     private ProgressBar progressBar;
-    private boolean ready=false;
+    private boolean ready = false;
+    private android.widget.SearchView searchView;
 
 
     @Override
@@ -67,25 +70,51 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 
-        android.widget.SearchView searchView = (android.widget.SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search11));
+
+        searchView = (android.widget.SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search11));
+        MenuItem searchMenuItem = menu.findItem(R.id.search11);
+        searchView.setOnQueryTextListener(this);
+
+
+
+
+        MenuItemCompat.setOnActionExpandListener(searchMenuItem,new MenuItemCompat.OnActionExpandListener() {
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                //Do whatever you want
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                adapter = new PokeListAdapter(result);
+                recView.setAdapter(adapter);
+                return true;
+            }
+        });
+
+
+
+
         // Assumes current activity is the searchable activity
         Log.d("SERD", "onCreateOptionsMenu:middle ");
-        searchView.setSearchableInfo(searchManager.getSearchableInfo( new ComponentName(this, SearchActivity.class)));
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, SearchActivity.class)));
         Log.d("SERD", "onCreateOptionsMenu: aftr");
         searchView.setIconifiedByDefault(false);
         searchView.setSubmitButtonEnabled(true);
 
 
-
         return true;
     }
 
-    private void bindViews(){
-        recView =(RecyclerView)findViewById(R.id.recView);
-        progressBar=(ProgressBar) findViewById(R.id.progressList);
+    private void bindViews() {
+        recView = (RecyclerView) findViewById(R.id.recView);
+        progressBar = (ProgressBar) findViewById(R.id.progressList);
         recView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recView.setLayoutManager(layoutManager);
+
 
         Log.d("deb", "onCreate: before load");
         loadJson();
@@ -100,12 +129,12 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
                 .addNetworkInterceptor(REWRITE_CACHE_CONTROL_INTERCEPTOR)
                 .cache(cache).build();
 
-        Retrofit retrofit= new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://pokeapi.co/api/v2/")
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        PokeListInterface pokelist=retrofit.create(PokeListInterface.class);
+        PokeListInterface pokelist = retrofit.create(PokeListInterface.class);
 
         Call<PokeList> call = pokelist.GetListPokemon();
         Log.d("deb", "onCreate: before enquee");
@@ -117,9 +146,9 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 
     @Override
     public void onResponse(Call<PokeList> call, Response<PokeList> response) {
-        Log.d("deb3", "onCreate: onRes"+response.code());
-        if(response.code()>299){
-            Toast.makeText(this,"codice errore"+response.code(),Toast.LENGTH_SHORT).show();
+        Log.d("deb3", "onCreate: onRes" + response.code());
+        if (response.code() > 299) {
+            Toast.makeText(this, "codice errore" + response.code(), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -133,27 +162,27 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 
         progressBar.setVisibility(View.GONE);
         recView.setVisibility(View.VISIBLE);
-        ready=true;
+        ready = true;
 
     }
 
     @Override
     public void onFailure(Call<PokeList> call, Throwable t) {
-        if(t.getMessage()==null){
+        if (t.getMessage() == null) {
             Log.d("deb", "onFailure: ");
-        }else{
-            Log.d("deb",t.getMessage());
+        } else {
+            Log.d("deb", t.getMessage());
         }
 
-        Toast.makeText(this,"chiamata network failed",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "chiamata network failed", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void OnCardClicked(View view, int position) {
-        Log.d("PKM", "OnCardClicked: "+position);
-        Intent i =new Intent(this,DetailActivity.class);
-        int pos=position+1;
-        i.putExtra("PokeNum",""+pos);
+        Log.d("PKM", "OnCardClicked: " + position);
+        Intent i = new Intent(this, DetailActivity.class);
+        int pos = position + 1;
+        i.putExtra("PokeNum", "" + pos);
         startActivity(i);
     }
 
@@ -164,18 +193,18 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 
             CacheControl.Builder cacheBuilder = new CacheControl.Builder();
             cacheBuilder.maxAge(0, TimeUnit.SECONDS);
-            cacheBuilder.maxStale(365,TimeUnit.DAYS);
+            cacheBuilder.maxStale(365, TimeUnit.DAYS);
             CacheControl cacheControl = cacheBuilder.build();
 
             Request request = chain.request();
-            if(isNetworkAvailable(monListActivity1.this)){
+            if (isNetworkAvailable(monListActivity1.this)) {
                 request = request.newBuilder()
                         .cacheControl(cacheControl)
                         .build();
             }
             okhttp3.Response originalResponse = chain.proceed(request);
             if (isNetworkAvailable(monListActivity1.this)) {
-                int maxAge = 60  * 60; // read from cache
+                int maxAge = 60 * 60; // read from cache
                 return originalResponse.newBuilder()
                         .header("Cache-Control", "public, max-age=" + maxAge)
                         .build();
@@ -189,30 +218,40 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     };
 
 
+    public boolean isNetworkAvailable(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+    }
 
 
-        public  boolean isNetworkAvailable(Context context) {
-            ConnectivityManager cm =
-                    (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-            return activeNetwork != null &&
-                    activeNetwork.isConnectedOrConnecting();
-        }
+
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-//        Log.d("deb4", "onOptionsItemSelected: ");
-//        if(!ready){
-//            return false;
-//        }
-//        MyParams q=new MyParams(result,"bu");
-//        new SearchTask().execute(q);
-        onSearchRequested();
+    public boolean onQueryTextSubmit(String query) {
+        Log.d("sr2", "onQueryTextSubmit: " + query);
 
+        MyParams mp=new MyParams(result,query,new ArrayList<Result>());
+        new SearchTask().execute(mp);
+        SearchResult=mp.rets;
+        adapter = new PokeListAdapter(SearchResult);
+        recView.setAdapter(adapter);
 
-        //TODO metti tutto in un thread uffaaaaa....
         return true;
     }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
+
+
+
+
+
+
 }
 //TODO immagini sulla lista? tweak cache

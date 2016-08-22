@@ -8,19 +8,20 @@ import com.di.walker.allen.simplepokedex1.list.Result;
 
 import java.util.ArrayList;
 
-public class SearchTask extends AsyncTask<MyParams,Long,ArrayList<String>>{
+public class SearchTask extends AsyncTask<MyParams,Long,MyParams>{
     @Override
-    protected ArrayList<String> doInBackground(MyParams... params) {
-        ArrayList<String> SearchRes=new ArrayList<String>();
+    protected MyParams doInBackground(MyParams... params) {
+
+
         for (Result x : params[0].rLis) {
             String q= params[0].query;
             if (x.getName().matches("(?i)("+q+").*")) {
                 Log.d("SRE1", "OnSearch: " + x.getName());
-                SearchRes.add(x.getName());
+                params[0].rets.add(x);
             }
         }
 
-        return SearchRes;
+        return null;
     }
 
 }

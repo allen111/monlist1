@@ -8,9 +8,11 @@ import java.util.ArrayList;
 public class MyParams{
     public ArrayList<Result> rLis;
     public String query;
-    public MyParams(ArrayList<Result> a,String quer){
+    public ArrayList<Result> rets;
+    public MyParams(ArrayList<Result> a,String quer, ArrayList<Result> results ){
         rLis=a;
         query=quer;
+        rets=results;
 
     }
 }
