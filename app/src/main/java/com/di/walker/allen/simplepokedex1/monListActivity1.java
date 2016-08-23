@@ -46,7 +46,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     private RecyclerView recView;
     private ArrayList<Result> result;
     private ArrayList<Result> SearchResult;
-    private ArrayList<String> list;
+
     private PokeListAdapter adapter;
     private ProgressBar progressBar;
     private boolean ready = false;
@@ -69,29 +69,12 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.list_menu, menu);
 
-        // Get the SearchView and set the searchable configuration
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-
-
         searchView = (android.widget.SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search11));
-        MenuItem searchMenuItem = menu.findItem(R.id.search11);
         searchView.setOnQueryTextListener(this);
-
-
-
-
-        MenuItemCompat.setOnActionExpandListener(searchMenuItem,this);
-
-
-
-
-        // Assumes current activity is the searchable activity
-        Log.d("SERD", "onCreateOptionsMenu:middle ");
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, SearchActivity.class)));
-        Log.d("SERD", "onCreateOptionsMenu: aftr");
         searchView.setIconifiedByDefault(false);
-        searchView.setSubmitButtonEnabled(true);
 
+        MenuItem searchMenuItem = menu.findItem(R.id.search11);
+        MenuItemCompat.setOnActionExpandListener(searchMenuItem,this);
 
         return true;
     }
@@ -103,8 +86,6 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recView.setLayoutManager(layoutManager);
 
-
-        Log.d("deb", "onCreate: before load");
         loadJson();
     }
 
@@ -167,20 +148,20 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 
     @Override
     public void OnCardClicked(View view, int position) {
-        Log.d("deb4", "OnCardClicked: " + position);
-        //String num=
+
         Intent i = new Intent(this, DetailActivity.class);
-        int pos = position + 1;
-        i.putExtra("PokeNum", "" + pos);
+
         if(searching){
             String url=SearchResult.get(position).getUrl();
             String[] nums= url.split("/");
             String num= nums[nums.length-1];
-            Log.d("deb4", "OnCardClicked: "+num);
             i.putExtra("PokeNum", "" + num);
-            startActivity(i);
-            return;
+
+        }else{
+            int pos = position + 1;
+            i.putExtra("PokeNum", "" + pos);
         }
+
         startActivity(i);
     }
 
@@ -230,33 +211,41 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        Log.d("sr2", "onQueryTextSubmit: " + query);
 
-        MyParams mp=new MyParams(result,query,new ArrayList<Result>());
-        new SearchTask().execute(mp);
-        SearchResult=mp.rets;
-        adapter = new PokeListAdapter(SearchResult);
-        recView.setAdapter(adapter);
-        adapter.setOnCardClickListner(this);
-        searching=true;
+        if(ready) {
+            MyParams mp = new MyParams(result, query, new ArrayList<Result>());
+            new SearchTask().execute(mp);
+            SearchResult = mp.rets;
+            adapter = new PokeListAdapter(SearchResult);
+            recView.setAdapter(adapter);
+            adapter.setOnCardClickListner(this);
+            searching = true;
 
-        return true;
+            return true;
+        }else{
+            Log.d("DEB", "onQueryTextSubmit: not ready");
+            return false;
+        }
     }
 
     @Override
     public boolean onQueryTextChange(String query) {
-        Log.d("sr2", "onQueryTextSubmit: " + query);
 
-        MyParams mp=new MyParams(result,query,new ArrayList<Result>());
-        new SearchTask().execute(mp);
-        SearchResult=mp.rets;
-        adapter = new PokeListAdapter(SearchResult);
-        recView.setAdapter(adapter);
-        adapter.setOnCardClickListner(this);
-        searching=true;
+        if(ready) {
+            MyParams mp = new MyParams(result, query, new ArrayList<Result>());
+            new SearchTask().execute(mp);
+            SearchResult = mp.rets;
+            adapter = new PokeListAdapter(SearchResult);
+            recView.setAdapter(adapter);
+            adapter.setOnCardClickListner(this);
+            searching = true;
 
-        return true;
+            return true;
+        }else{
+            Log.d("DEB", "onQueryTextChange: not ready");
+            return false;
 
+        }
 
     }
 
@@ -277,6 +266,9 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         return true;
     }
 }
-//TODO immagini sulla lista? tweak cache
 
-//TODO clear searchVIew trash, minor check perche non compaiono quando tastiera up serached
+
+//TODO immagini sulla lista custom view della lista
+
+
+//TODO tweak cache,optim pls, minor check perche non compaiono quando tastiera up serached
