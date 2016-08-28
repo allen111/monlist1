@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -42,11 +43,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class monListActivity1 extends AppCompatActivity implements Callback<PokeList>,PokeListAdapter.OnCardClikListner,  android.widget.SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
+public class monListActivity1 extends AppCompatActivity implements Callback<PokeList>, PokeListAdapter.OnCardClikListner, android.widget.SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
     private RecyclerView recView;
     private ArrayList<Result> result;
     private ArrayList<Result> SearchResult;
-
     private PokeListAdapter adapter;
     private ProgressBar progressBar;
     private boolean ready = false;
@@ -54,13 +54,10 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     private android.widget.SearchView searchView;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mon_list1);
-        Log.d("deb", "onCreate: before bind");
-
         bindViews();
     }
 
@@ -68,18 +65,20 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.list_menu, menu);
-
+        //inizializzo la barra di ricerca come searchWidget
         searchView = (android.widget.SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search11));
+        //implemento i metodi per leggere la query della ricerca
         searchView.setOnQueryTextListener(this);
         searchView.setIconifiedByDefault(false);
-
+        //riferimento all'item del menu della barra di ricerca per intercettare l'espanzione e il successivo ritorno all'icona
         MenuItem searchMenuItem = menu.findItem(R.id.search11);
-        MenuItemCompat.setOnActionExpandListener(searchMenuItem,this);
+        MenuItemCompat.setOnActionExpandListener(searchMenuItem, this);
 
         return true;
     }
 
     private void bindViews() {
+
         recView = (RecyclerView) findViewById(R.id.recView);
         progressBar = (ProgressBar) findViewById(R.id.progressList);
         recView.setHasFixedSize(true);
@@ -90,6 +89,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     }
 
     private void loadJson() {
+        //TODO cache
         File httpCacheDirectory = new File(monListActivity1.this.getCacheDir(), "responses");
         int cacheSize = 10 * 1024 * 1024; // 10 MiB
         Cache cache = new Cache(httpCacheDirectory, cacheSize);
@@ -97,7 +97,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         OkHttpClient client = new OkHttpClient.Builder()
                 .addNetworkInterceptor(REWRITE_CACHE_CONTROL_INTERCEPTOR)
                 .cache(cache).build();
-
+        //retrofit preparazione e eseguzione della chiamata html per la lista
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://pokeapi.co/api/v2/")
                 .client(client)
@@ -138,12 +138,12 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     @Override
     public void onFailure(Call<PokeList> call, Throwable t) {
         if (t.getMessage() == null) {
-            Log.d("deb", "onFailure: ");
+            Log.d("deb", "onFailure: no e?");
         } else {
             Log.d("deb", t.getMessage());
         }
 
-        Toast.makeText(this, "chiamata network failed", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "chiamata network failed please retry", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -151,18 +151,19 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 
         Intent i = new Intent(this, DetailActivity.class);
 
-        if(searching){
-            String url=SearchResult.get(position).getUrl();
-            String[] nums= url.split("/");
-            String num= nums[nums.length-1];
+        if (searching) {
+            String url = SearchResult.get(position).getUrl();
+            String[] splitted = url.split("/");
+            String num = splitted[splitted.length - 1];
             i.putExtra("PokeNum", "" + num);
 
-        }else{
+        } else {
             int pos = position + 1;
             i.putExtra("PokeNum", "" + pos);
         }
 
         startActivity(i);
+
     }
 
 
@@ -206,13 +207,10 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     }
 
 
-
-
-
     @Override
     public boolean onQueryTextSubmit(String query) {
 
-        if(ready) {
+        if (ready) {
             MyParams mp = new MyParams(result, query, new ArrayList<Result>());
             new SearchTask().execute(mp);
             SearchResult = mp.rets;
@@ -222,8 +220,9 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
             searching = true;
 
             return true;
-        }else{
+        } else {
             Log.d("DEB", "onQueryTextSubmit: not ready");
+            Toast.makeText(this, "errore nella ricerca", Toast.LENGTH_SHORT).show();
             return false;
         }
     }
@@ -231,7 +230,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     @Override
     public boolean onQueryTextChange(String query) {
 
-        if(ready) {
+        if (ready) {
             MyParams mp = new MyParams(result, query, new ArrayList<Result>());
             new SearchTask().execute(mp);
             SearchResult = mp.rets;
@@ -241,8 +240,9 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
             searching = true;
 
             return true;
-        }else{
+        } else {
             Log.d("DEB", "onQueryTextChange: not ready");
+            Toast.makeText(this, "errore nella ricerca", Toast.LENGTH_SHORT).show();
             return false;
 
         }
@@ -250,25 +250,29 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     }
 
 
-
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
-        //Do whatever you want
+        //set hint e richiedo il focus sulla search view
+        searchView.setQueryHint("Search for pokemon");
+        searchView.requestFocus();
         return true;
     }
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
+        //reinizializzo la lista allo stato base quando si esce dalla ricerca
         adapter = new PokeListAdapter(result);
         recView.setAdapter(adapter);
         adapter.setOnCardClickListner(this);
-        searching=false;
+        searching = false;
         return true;
     }
 }
 
 
-//TODO immagini sulla lista custom view della lista
+// TODO immagini sulla lista custom view della lista
 
 
-//TODO tweak cache,optim pls, minor check perche non compaiono quando tastiera up serached
+// TODO tweak cache,optim pls, minor check perche non compaiono quando tastiera up serached
+// TODO: comment pls
+// TODO tap to retry!

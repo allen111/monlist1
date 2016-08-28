@@ -53,30 +53,31 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Bundle extras =getIntent().getExtras();
-        pokeQuery=extras.getString("PokeNum");
-        Log.d("DEB1", "onCreate: "+pokeQuery);
+        Bundle extras = getIntent().getExtras();
+        pokeQuery = extras.getString("PokeNum");
+        Log.d("DEB1", "onCreate: " + pokeQuery);
         bindViews();
-        istance=buildPokeapiInstance();
+        istance = buildPokeapiInstance();
         startSearch();
 
     }
-    void bindViews(){
-        pokeName =(TextView)findViewById(R.id.pkmD_name);
-        pokeImg =(ImageView)findViewById(R.id.pkmD_img);
-        pkm_det=(LinearLayout)findViewById(R.id.pkmD_detail);
-        progBar=(ProgressBar) findViewById(R.id.progBar_d);
-        pkmWeight=(TextView)findViewById(R.id.pkmn_weight);
-        pkmHp=(TextView)findViewById(R.id.pkmn_hp);
-        pkmAttack=(TextView)findViewById(R.id.pkmn_attack);
-        pkmDefense=(TextView)findViewById(R.id.pkmn_defense);
-        pkmSpeed=(TextView)findViewById(R.id.pkmn_speed);
-        pkmTypes=(TextView)findViewById(R.id.pkmn_types);
+
+    void bindViews() {
+        pokeName = (TextView) findViewById(R.id.pkmD_name);
+        pokeImg = (ImageView) findViewById(R.id.pkmD_img);
+        pkm_det = (LinearLayout) findViewById(R.id.pkmD_detail);
+        progBar = (ProgressBar) findViewById(R.id.progBar_d);
+        pkmWeight = (TextView) findViewById(R.id.pkmn_weight);
+        pkmHp = (TextView) findViewById(R.id.pkmn_hp);
+        pkmAttack = (TextView) findViewById(R.id.pkmn_attack);
+        pkmDefense = (TextView) findViewById(R.id.pkmn_defense);
+        pkmSpeed = (TextView) findViewById(R.id.pkmn_speed);
+        pkmTypes = (TextView) findViewById(R.id.pkmn_types);
         Log.d("deb2", "bindViews: ");
 
 
-
     }
+
     private PokeapiInterface buildPokeapiInstance() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://pokeapi.co/api/v2/")
@@ -87,11 +88,11 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
     }
 
 
-    private void startSearch(){
+    private void startSearch() {
 
         Log.d("deb2", "startSearch: ");
-        if(pokeQuery.length()== 0){
-            Toast.makeText(this,"errore",Toast.LENGTH_SHORT).show();
+        if (pokeQuery.length() == 0) {
+            Toast.makeText(this, "errore", Toast.LENGTH_SHORT).show();
             return;
         }
         progBar.setVisibility(View.VISIBLE);
@@ -101,8 +102,8 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
 
 
             istance.searchForPokemon(pokeQuery).enqueue(this);
-        }catch (RuntimeException e){
-            Toast.makeText(this,"chiamata network failed",Toast.LENGTH_SHORT).show();
+        } catch (RuntimeException e) {
+            Toast.makeText(this, "chiamata network failed", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -110,13 +111,13 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
     @Override
     public void onResponse(Call<Pokemon> call, Response<Pokemon> response) {
         Log.d("deb2", "onResponse: ");
-        Pokemon result=response.body();
-        if (result==null){
-            Toast.makeText(this,"errore ?",Toast.LENGTH_SHORT).show();
+        Pokemon result = response.body();
+        if (result == null) {
+            Toast.makeText(this, "errore ?", Toast.LENGTH_SHORT).show();
             return;
         }
-        int num=result.getId();
-        pokeName.setText(result.getName() +" #"+ num);
+        int num = result.getId();
+        pokeName.setText(result.getName() + " #" + num);
         pkmWeight.setText("Weight: " + result.getWeight());
         for (Stat s : result.getStats()) {
             switch (s.getStat().getName()) {
@@ -135,9 +136,9 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
                     break;
             }
         }
-        String types="Types: ";
-        for (Type t : result.getTypes()){
-            types=types+" "+t.getType().getName();
+        String types = "Types: ";
+        for (Type t : result.getTypes()) {
+            types = types + " " + t.getType().getName();
         }
         pkmTypes.setText(types);
         Picasso.with(this).load(result.getSprites().getFrontDefault()).into(pokeImg);
@@ -149,7 +150,7 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
     @Override
     public void onFailure(Call<Pokemon> call, Throwable t) {
         Log.d("deb2", "onFailure: ");
-        Toast.makeText(this,"chiamata network failed",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "chiamata network failed", Toast.LENGTH_SHORT).show();
 
     }
 
