@@ -1,6 +1,8 @@
 package com.di.walker.allen.simplepokedex1;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -21,6 +23,15 @@ import com.di.walker.allen.simplepokedex1.model.Stat;
 import com.di.walker.allen.simplepokedex1.model.Type;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Cache;
+import okhttp3.CacheControl;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -79,8 +90,17 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
     }
 
     private PokeapiInterface buildPokeapiInstance() {
+
+        File httpCacheDirectory = new File(DetailActivity.this.getCacheDir(), "responses");
+        int cacheSize = 10 * 1024 * 1024; // 10 MiB
+        Cache cache = new Cache(httpCacheDirectory, cacheSize);
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addNetworkInterceptor(REWRITE_CACHE_CONTROL_INTERCEPTOR)
+                .cache(cache).build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://pokeapi.co/api/v2/")
+                .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -154,5 +174,46 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
 
     }
 
+
+    private Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
+        @Override
+        public okhttp3.Response intercept(Chain chain) throws IOException {
+
+            CacheControl.Builder cacheBuilder = new CacheControl.Builder();
+            cacheBuilder.maxAge(0, TimeUnit.SECONDS);
+            cacheBuilder.maxStale(365, TimeUnit.DAYS);
+            CacheControl cacheControl = cacheBuilder.build();
+
+            Request request = chain.request();
+            if (isNetworkAvailable(DetailActivity.this)) {
+                request = request.newBuilder()
+                        .cacheControl(cacheControl)
+                        .build();
+            }
+            okhttp3.Response originalResponse = chain.proceed(request);
+            if (isNetworkAvailable(DetailActivity.this)) {
+                int maxAge = 60 * 60; // read from cache
+                return originalResponse.newBuilder()
+                        .header("Cache-Control", "public, max-age=" + maxAge)
+                        .build();
+            } else {
+                int maxStale = 60 * 60 * 24 * 28; // tolerate 4-weeks stale
+                return originalResponse.newBuilder()
+                        .header("Cache-Control", "public, only-if-cached, max-stale=" + maxStale)
+                        .build();
+            }
+        }
+    };
+
+
+    public boolean isNetworkAvailable(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+    }
+
+
 }
-//TODO implement caching pls
+//TODO expand and layout

@@ -78,7 +78,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     }
 
     private void bindViews() {
-
+        //qui istanzio le view
         recView = (RecyclerView) findViewById(R.id.recView);
         progressBar = (ProgressBar) findViewById(R.id.progressList);
         recView.setHasFixedSize(true);
@@ -148,7 +148,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 
     @Override
     public void OnCardClicked(View view, int position) {
-
+        //apertura di un altra activity con i dettagli con due casi :durante la ricerca e direttamente dalla lista
         Intent i = new Intent(this, DetailActivity.class);
 
         if (searching) {
@@ -209,7 +209,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-
+        //eseguo la ricerca quando viene premuto il tasto submit e modifico la lista
         if (ready) {
             MyParams mp = new MyParams(result, query, new ArrayList<Result>());
             new SearchTask().execute(mp);
@@ -229,7 +229,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 
     @Override
     public boolean onQueryTextChange(String query) {
-
+        //eseguo la ricerca all'aggiunta di ogni lettera e modifico la lista
         if (ready) {
             MyParams mp = new MyParams(result, query, new ArrayList<Result>());
             new SearchTask().execute(mp);
@@ -270,9 +270,8 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 }
 
 
-// TODO immagini sulla lista custom view della lista
-
-
-// TODO tweak cache,optim pls, minor check perche non compaiono quando tastiera up serached
-// TODO: comment pls
+// TODO custom view della lista <-
+// TODO tweak cache ? more time
 // TODO tap to retry!
+// TODO: comment pls
+// TODO  minor check perche non compaiono quando tastiera up serached
