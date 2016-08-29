@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.di.walker.allen.simplepokedex1.list.PokeList;
@@ -43,7 +44,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class monListActivity1 extends AppCompatActivity implements Callback<PokeList>, PokeListAdapter.OnCardClikListner, android.widget.SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
+public class monListActivity1 extends AppCompatActivity implements Callback<PokeList>, PokeListAdapter.OnCardClikListner, android.widget.SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener, View.OnClickListener {
     private RecyclerView recView;
     private ArrayList<Result> result;
     private ArrayList<Result> SearchResult;
@@ -52,6 +53,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     private boolean ready = false;
     private boolean searching = false;
     private android.widget.SearchView searchView;
+    private TextView tapD;
 
 
     @Override
@@ -80,6 +82,8 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     private void bindViews() {
         //qui istanzio le view
         recView = (RecyclerView) findViewById(R.id.recView);
+        tapD =(TextView) findViewById(R.id.tapD);
+        tapD.setOnClickListener(this);
         progressBar = (ProgressBar) findViewById(R.id.progressList);
         recView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -144,6 +148,8 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         }
 
         Toast.makeText(this, "chiamata network failed please retry", Toast.LENGTH_SHORT).show();
+        progressBar.setVisibility(View.GONE);
+        tapD.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -267,11 +273,19 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         searching = false;
         return true;
     }
+
+    @Override
+    public void onClick(View v) {
+        if(v==tapD && tapD.getVisibility()==View.VISIBLE){
+            loadJson();
+            tapD.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
+        }
+    }
 }
 
 
 // TODO custom view della lista <-
 // TODO tweak cache ? more time
-// TODO tap to retry!
 // TODO: comment pls
 // TODO  minor check perche non compaiono quando tastiera up serached

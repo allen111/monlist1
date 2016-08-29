@@ -26,5 +26,15 @@
         android:layout_height="120dp"
         android:layout_margin="100dp"
         style="?android:attr/progressBarStyleLarge"/>
+    <TextView
+        android:gravity="center"
+        android:textSize="50sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="@string/tap_to_retry"
+        android:id="@+id/tapD"
+        android:background="@color/colorAccent"
+        />
 
 </RelativeLayout>

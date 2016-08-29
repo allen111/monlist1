@@ -11,4 +11,5 @@
     <string name="hint">type name to search</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="appName">SimplePokedex1</string>
+    <string name="tap_to_retry">tap to retry</string>
 </resources>
