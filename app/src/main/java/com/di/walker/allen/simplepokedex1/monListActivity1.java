@@ -1,7 +1,6 @@
 package com.di.walker.allen.simplepokedex1;
 
-import android.app.SearchManager;
-import android.content.ComponentName;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -11,28 +10,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.di.walker.allen.simplepokedex1.list.PokeList;
 import com.di.walker.allen.simplepokedex1.list.Result;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
@@ -82,7 +73,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     private void bindViews() {
         //qui istanzio le view
         recView = (RecyclerView) findViewById(R.id.recView);
-        tapD =(TextView) findViewById(R.id.tapD);
+        tapD = (TextView) findViewById(R.id.tapD);
         tapD.setOnClickListener(this);
         progressBar = (ProgressBar) findViewById(R.id.progressList);
         recView.setHasFixedSize(true);
@@ -128,7 +119,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         PokeList jsonResponse = response.body();
         result = jsonResponse.getResults();
 
-        adapter = new PokeListAdapter(result,monListActivity1.this.getApplicationContext());
+        adapter = new PokeListAdapter(result);
         recView.setAdapter(adapter);
 
         adapter.setOnCardClickListner(this);
@@ -220,7 +211,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
             MyParams mp = new MyParams(result, query, new ArrayList<Result>());
             new SearchTask().execute(mp);
             SearchResult = mp.rets;
-            adapter = new PokeListAdapter(SearchResult,monListActivity1.this.getApplicationContext());
+            adapter = new PokeListAdapter(SearchResult);
             recView.setAdapter(adapter);
             adapter.setOnCardClickListner(this);
             searching = true;
@@ -240,7 +231,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
             MyParams mp = new MyParams(result, query, new ArrayList<Result>());
             new SearchTask().execute(mp);
             SearchResult = mp.rets;
-            adapter = new PokeListAdapter(SearchResult,monListActivity1.this.getApplicationContext());
+            adapter = new PokeListAdapter(SearchResult);
             recView.setAdapter(adapter);
             adapter.setOnCardClickListner(this);
             searching = true;
@@ -267,7 +258,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
         //reinizializzo la lista allo stato base quando si esce dalla ricerca
-        adapter = new PokeListAdapter(result,monListActivity1.this.getApplicationContext());
+        adapter = new PokeListAdapter(result);
         recView.setAdapter(adapter);
         adapter.setOnCardClickListner(this);
         searching = false;
@@ -276,7 +267,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 
     @Override
     public void onClick(View v) {
-        if(v==tapD && tapD.getVisibility()==View.VISIBLE){
+        if (v == tapD && tapD.getVisibility() == View.VISIBLE) {
             loadJson();
             tapD.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
@@ -285,7 +276,6 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 }
 
 
-// TODO custom view della lista <-
-// TODO tweak cache ? more time
 // TODO: comment pls
 // TODO  minor check perche non compaiono quando tastiera up serached
+// TODO design ...

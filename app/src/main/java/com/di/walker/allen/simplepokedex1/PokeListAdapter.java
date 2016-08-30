@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.di.walker.allen.simplepokedex1.list.PokeList;
 import com.di.walker.allen.simplepokedex1.list.Result;
 
 import java.lang.reflect.Field;
@@ -21,11 +20,9 @@ import java.util.ArrayList;
 public class PokeListAdapter extends RecyclerView.Adapter<PokeListAdapter.ViewHolder> {
     ArrayList<Result> pokeList;
     OnCardClikListner onCardClickListner;
-    Context context;
 
-    public PokeListAdapter(ArrayList<Result> l,Context context){
+    public PokeListAdapter(ArrayList<Result> l){
         pokeList=l;
-        this.context=context;
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
