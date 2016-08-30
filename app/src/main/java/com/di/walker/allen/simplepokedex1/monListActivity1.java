@@ -95,7 +95,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     private void loadJson() {
         //TODO cache
         File httpCacheDirectory = new File(monListActivity1.this.getCacheDir(), "responses");
-        int cacheSize = 10 * 1024 * 1024; // 10 MiB
+        int cacheSize = 100 * 1024 * 1024; // 100 MiB
         Cache cache = new Cache(httpCacheDirectory, cacheSize);
 
         OkHttpClient client = new OkHttpClient.Builder()
@@ -128,7 +128,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         PokeList jsonResponse = response.body();
         result = jsonResponse.getResults();
 
-        adapter = new PokeListAdapter(result);
+        adapter = new PokeListAdapter(result,monListActivity1.this.getApplicationContext());
         recView.setAdapter(adapter);
 
         adapter.setOnCardClickListner(this);
@@ -190,12 +190,12 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
             }
             okhttp3.Response originalResponse = chain.proceed(request);
             if (isNetworkAvailable(monListActivity1.this)) {
-                int maxAge = 60 * 60; // read from cache
+                int maxAge = 600 * 60; // read from cache
                 return originalResponse.newBuilder()
                         .header("Cache-Control", "public, max-age=" + maxAge)
                         .build();
             } else {
-                int maxStale = 60 * 60 * 24 * 28; // tolerate 4-weeks stale
+                int maxStale = 60 * 60 * 24 * 280; // tolerate 4-weeks stale
                 return originalResponse.newBuilder()
                         .header("Cache-Control", "public, only-if-cached, max-stale=" + maxStale)
                         .build();
@@ -220,7 +220,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
             MyParams mp = new MyParams(result, query, new ArrayList<Result>());
             new SearchTask().execute(mp);
             SearchResult = mp.rets;
-            adapter = new PokeListAdapter(SearchResult);
+            adapter = new PokeListAdapter(SearchResult,monListActivity1.this.getApplicationContext());
             recView.setAdapter(adapter);
             adapter.setOnCardClickListner(this);
             searching = true;
@@ -240,7 +240,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
             MyParams mp = new MyParams(result, query, new ArrayList<Result>());
             new SearchTask().execute(mp);
             SearchResult = mp.rets;
-            adapter = new PokeListAdapter(SearchResult);
+            adapter = new PokeListAdapter(SearchResult,monListActivity1.this.getApplicationContext());
             recView.setAdapter(adapter);
             adapter.setOnCardClickListner(this);
             searching = true;
@@ -267,7 +267,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
         //reinizializzo la lista allo stato base quando si esce dalla ricerca
-        adapter = new PokeListAdapter(result);
+        adapter = new PokeListAdapter(result,monListActivity1.this.getApplicationContext());
         recView.setAdapter(adapter);
         adapter.setOnCardClickListner(this);
         searching = false;

@@ -92,7 +92,7 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
     private PokeapiInterface buildPokeapiInstance() {
 
         File httpCacheDirectory = new File(DetailActivity.this.getCacheDir(), "responses");
-        int cacheSize = 10 * 1024 * 1024; // 10 MiB
+        int cacheSize = 100 * 1024 * 1024; // 100 MiB
         Cache cache = new Cache(httpCacheDirectory, cacheSize);
 
         OkHttpClient client = new OkHttpClient.Builder()
@@ -156,6 +156,7 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
                     break;
             }
         }
+
         String types = "Types: ";
         for (Type t : result.getTypes()) {
             types = types + " " + t.getType().getName();
@@ -165,6 +166,7 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
 
         progBar.setVisibility(View.GONE);
         pkm_det.setVisibility(View.VISIBLE);
+       // bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
     }
 
     @Override
@@ -192,12 +194,12 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
             }
             okhttp3.Response originalResponse = chain.proceed(request);
             if (isNetworkAvailable(DetailActivity.this)) {
-                int maxAge = 60 * 60; // read from cache
+                int maxAge = 600 * 60; // read from cache
                 return originalResponse.newBuilder()
                         .header("Cache-Control", "public, max-age=" + maxAge)
                         .build();
             } else {
-                int maxStale = 60 * 60 * 24 * 28; // tolerate 4-weeks stale
+                int maxStale = 60 * 60 * 24 * 280; // tolerate 4-weeks stale
                 return originalResponse.newBuilder()
                         .header("Cache-Control", "public, only-if-cached, max-stale=" + maxStale)
                         .build();

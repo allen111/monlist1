@@ -6,7 +6,7 @@
     <string name="pokemonimage">pokemonImage</string>
     <string name="title_mon_list">mons</string>
     <string name="title_mon_detail">mon Detail</string>
-    <string name="pokemonCount">811</string>
+    <string name="pokemonCount">721</string>
     <string name="title_activity_detail">DetailActivity</string>
     <string name="hint">type name to search</string>
     <string name="title_activity_search">SearchActivity</string>
