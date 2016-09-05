@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.di.walker.allen.simplepokedex1.model.Move;
 import com.di.walker.allen.simplepokedex1.model.Pokemon;
 import com.di.walker.allen.simplepokedex1.model.Stat;
 import com.di.walker.allen.simplepokedex1.model.Type;
@@ -25,6 +26,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
@@ -73,7 +75,7 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
 
     }
 
-    void bindViews() {
+    private void bindViews() {
         pokeName = (TextView) findViewById(R.id.pkmD_name);
         pokeImg = (ImageView) findViewById(R.id.pkmD_img);
         pkm_det = (LinearLayout) findViewById(R.id.pkmD_detail);
@@ -157,16 +159,27 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
             }
         }
 
-        String types = "Types: ";
+        String types = "";
+
+        String type="null";
+        Type t1=null;
         for (Type t : result.getTypes()) {
-            types = types + " " + t.getType().getName();
+            types = t.getType().getName()+ " " +types  ;
+            t1=t;
         }
+        type=t1.getType().getName();
+        types="Types: "+types;
         pkmTypes.setText(types);
-        Picasso.with(this).load(result.getSprites().getFrontDefault()).into(pokeImg);
+        Log.d("TYP", "onResponse: "+type);
 
         progBar.setVisibility(View.GONE);
+
         pkm_det.setVisibility(View.VISIBLE);
-       // bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
+
+        Picasso.with(this).load(result.getSprites().getFrontDefault()).into(pokeImg);
+
+
+
     }
 
     @Override

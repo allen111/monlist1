@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,7 +75,9 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         //qui istanzio le view
         recView = (RecyclerView) findViewById(R.id.recView);
         tapD = (TextView) findViewById(R.id.tapD);
-        tapD.setOnClickListener(this);
+        if (tapD != null) {
+            tapD.setOnClickListener(this);
+        }
         progressBar = (ProgressBar) findViewById(R.id.progressList);
         recView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -84,7 +87,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     }
 
     private void loadJson() {
-        //TODO cache
+        //istanzio la cache e il client delle cache
         File httpCacheDirectory = new File(monListActivity1.this.getCacheDir(), "responses");
         int cacheSize = 100 * 1024 * 1024; // 100 MiB
         Cache cache = new Cache(httpCacheDirectory, cacheSize);
@@ -101,15 +104,13 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         PokeListInterface pokelist = retrofit.create(PokeListInterface.class);
 
         Call<PokeList> call = pokelist.GetListPokemon();
-        Log.d("deb", "onCreate: before enquee");
-
         call.enqueue(this);
-        Log.d("deb", "onCreate: after enquee");
 
     }
 
     @Override
     public void onResponse(Call<PokeList> call, Response<PokeList> response) {
+
         Log.d("deb3", "onCreate: onRes" + response.code());
         if (response.code() > 299) {
             Toast.makeText(this, "codice errore" + response.code(), Toast.LENGTH_SHORT).show();
@@ -214,7 +215,10 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
             adapter = new PokeListAdapter(SearchResult);
             recView.setAdapter(adapter);
             adapter.setOnCardClickListner(this);
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             searching = true;
+
 
             return true;
         } else {
@@ -267,6 +271,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 
     @Override
     public void onClick(View v) {
+        //in caso di errore si puo chiedere nuovamente la lista
         if (v == tapD && tapD.getVisibility() == View.VISIBLE) {
             loadJson();
             tapD.setVisibility(View.GONE);
@@ -279,3 +284,4 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 // TODO: comment pls
 // TODO  minor check perche non compaiono quando tastiera up serached
 // TODO design ...
+// FEATURE filter in list like generation
