@@ -41,7 +41,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(i);
         } else {
 
-            if (v.getId() == R.id.listButton) {
+            if (v.getId() == R.id.squadButton) {
+
                 Intent i = new Intent(this, Squadra.class);
                 startActivity(i);
             }

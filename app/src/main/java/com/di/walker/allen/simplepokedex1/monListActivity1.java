@@ -3,6 +3,7 @@ package com.di.walker.allen.simplepokedex1;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -29,6 +30,7 @@ import com.di.walker.allen.simplepokedex1.list.Result;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import okhttp3.Cache;
 import okhttp3.CacheControl;
@@ -51,12 +53,16 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     private boolean searching = false;
     private android.widget.SearchView searchView;
     private TextView tapD;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mon_list1);
+        sharedPreferences=getSharedPreferences("PokeSquad",Context.MODE_PRIVATE);
+        editor=sharedPreferences.edit();
         bindViews();
     }
 
@@ -100,8 +106,18 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 Log.d("SWP", "onSwiped: "+direction);
-                Log.d("SWP", "onSwiped: "+viewHolder.getAdapterPosition());
+                Log.d("SP1", "onSwiped: "+viewHolder.getAdapterPosition()); //+1
+                Log.d("SP1", "onSwiped: "+result.get(viewHolder.getAdapterPosition()).getName());
                 recView.getAdapter().notifyItemChanged(viewHolder.getAdapterPosition());
+                editor.putInt(result.get(viewHolder.getAdapterPosition()).getName(),viewHolder.getAdapterPosition()+1);
+                editor.commit();
+//cicla ovunque
+//                Map<String,?> a= sharedPreferences.getAll();
+//
+//                for (Map.Entry<String, ?> entry : a.entrySet()){
+//                    Log.d("SP!", "onSwiped: "+entry.getKey()+entry.getValue());
+//                }
+
 
             }
             @Override
@@ -327,5 +343,5 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 
 // TODO: comment pls
 // TODO  minor check perche non compaiono quando tastiera up serached
-// TODO for squad create shared pref func to add pokemon on swipe maybe bar low to undo? activity retrive and display
+// TODO for squad  maybe bar low to undo? activity retrive and display
 // TODO shake
