@@ -32,6 +32,7 @@ public class PokeListAdapter extends RecyclerView.Adapter<PokeListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
+
         holder.pk_name.setText(pokeList.get(position).getName());
         holder.pk_url.setText(pokeList.get(position).getUrl());
         String url = pokeList.get(position).getUrl();

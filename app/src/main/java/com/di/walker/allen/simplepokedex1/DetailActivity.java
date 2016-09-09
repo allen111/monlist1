@@ -4,21 +4,20 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.KeyEvent;
+
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.di.walker.allen.simplepokedex1.model.Move;
+
 import com.di.walker.allen.simplepokedex1.model.Pokemon;
 import com.di.walker.allen.simplepokedex1.model.Stat;
 import com.di.walker.allen.simplepokedex1.model.Type;
@@ -26,7 +25,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
@@ -92,7 +91,7 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
     }
 
     private PokeapiInterface buildPokeapiInstance() {
-
+        //inizializzo il client per la cache
         File httpCacheDirectory = new File(DetailActivity.this.getCacheDir(), "responses");
         int cacheSize = 100 * 1024 * 1024; // 100 MiB
         Cache cache = new Cache(httpCacheDirectory, cacheSize);
@@ -100,6 +99,7 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
         OkHttpClient client = new OkHttpClient.Builder()
                 .addNetworkInterceptor(REWRITE_CACHE_CONTROL_INTERCEPTOR)
                 .cache(cache).build();
+        //chiamata retrofit
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://pokeapi.co/api/v2/")
                 .client(client)
@@ -111,7 +111,7 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
 
 
     private void startSearch() {
-
+//metodo per il recupero dei dati del pokemon
         Log.d("deb2", "startSearch: ");
         if (pokeQuery.length() == 0) {
             Toast.makeText(this, "errore", Toast.LENGTH_SHORT).show();
@@ -121,8 +121,6 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
         pkm_det.setVisibility(View.GONE);
 
         try {
-
-
             istance.searchForPokemon(pokeQuery).enqueue(this);
         } catch (RuntimeException e) {
             Toast.makeText(this, "chiamata network failed", Toast.LENGTH_SHORT).show();
@@ -139,6 +137,7 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
             return;
         }
         int num = result.getId();
+        // visualizzo le statistiche
         pokeName.setText(result.getName() + " #" + num);
         pkmWeight.setText("Weight: " + result.getWeight());
         for (Stat s : result.getStats()) {
@@ -193,6 +192,7 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
     private Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
         @Override
         public okhttp3.Response intercept(Chain chain) throws IOException {
+            //inizializzo i dati per il client cache
 
             CacheControl.Builder cacheBuilder = new CacheControl.Builder();
             cacheBuilder.maxAge(0, TimeUnit.SECONDS);
