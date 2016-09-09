@@ -18,21 +18,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".monListActivity1" >
-
-
-        </activity>
+        <activity android:name=".monListActivity1"></activity>
         <activity
             android:name=".DetailActivity"
             android:label="@string/title_activity_detail"
             android:parentActivityName=".monListActivity1"
             android:theme="@style/AppTheme.NoActionBar">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.di.walker.allen.simplepokedex1.monListActivity1" />
         </activity>
-
+        <activity android:name=".Squadra"></activity>
     </application>
 
 </manifest>

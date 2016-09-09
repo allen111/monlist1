@@ -3,13 +3,18 @@ package com.di.walker.allen.simplepokedex1;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -82,10 +87,49 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         recView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recView.setLayoutManager(layoutManager);
-
+        initSwipe();
         loadJson();
     }
+    private void initSwipe(){
+        ItemTouchHelper.SimpleCallback SimpleitemTouchHelper = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT ) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
 
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                Log.d("SWP", "onSwiped: "+direction);
+                Log.d("SWP", "onSwiped: "+viewHolder.getAdapterPosition());
+                recView.getAdapter().notifyItemChanged(viewHolder.getAdapterPosition());
+
+            }
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    View itemView = viewHolder.itemView;
+
+                    Paint p = new Paint();
+                    p.setColor(Color.RED);
+
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            c.drawRoundRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
+                                    (float) itemView.getRight(), (float) itemView.getBottom(),10.0f,10.0f, p);
+                        }else{
+                            c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
+                                    (float) itemView.getRight(), (float) itemView.getBottom(), p);
+                        }
+                    }
+
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                }
+
+        };
+        ItemTouchHelper ith= new ItemTouchHelper(SimpleitemTouchHelper);
+        ith.attachToRecyclerView(recView);
+
+    }
     private void loadJson() {
         //istanzio la cache e il client delle cache
         File httpCacheDirectory = new File(monListActivity1.this.getCacheDir(), "responses");
@@ -283,5 +327,5 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 
 // TODO: comment pls
 // TODO  minor check perche non compaiono quando tastiera up serached
-// TODO design ...
-// FEATURE filter in list like generation
+// TODO for squad create shared pref func to add pokemon on swipe maybe bar low to undo? activity retrive and display
+// TODO shake

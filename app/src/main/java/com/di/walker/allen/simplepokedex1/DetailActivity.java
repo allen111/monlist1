@@ -1,14 +1,17 @@
 package com.di.walker.allen.simplepokedex1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
+import android.view.MotionEvent;
 import android.view.View;
 
 import android.widget.ImageView;
@@ -70,7 +73,7 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
         Log.d("DEB1", "onCreate: " + pokeQuery);
         bindViews();
         istance = buildPokeapiInstance();
-        startSearch();
+        startSearch(Integer.parseInt(pokeQuery));
 
     }
 
@@ -110,15 +113,16 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
     }
 
 
-    private void startSearch() {
+    private void startSearch(int pokequery) {
 //metodo per il recupero dei dati del pokemon
         Log.d("deb2", "startSearch: ");
-        if (pokeQuery.length() == 0) {
+        if (pokequery <= 0) {
             Toast.makeText(this, "errore", Toast.LENGTH_SHORT).show();
             return;
         }
         progBar.setVisibility(View.VISIBLE);
         pkm_det.setVisibility(View.GONE);
+        pokeQuery=""+pokequery;
 
         try {
             istance.searchForPokemon(pokeQuery).enqueue(this);
@@ -229,6 +233,61 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
                 activeNetwork.isConnectedOrConnecting();
     }
 
+    float x1,x2;
+    final int MIN_DISTANCE = 150;
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        int action = MotionEventCompat.getActionMasked(event);
 
+        switch(action) {
+            case MotionEvent.ACTION_DOWN:
+                x1 = event.getX();
+
+                break;
+            case MotionEvent.ACTION_UP:
+                x2 = event.getX();
+
+                float deltaX = x2 - x1;
+                deltaX=Math.abs(deltaX);
+
+                if (deltaX >MIN_DISTANCE){
+
+                    if(x1<x2){
+
+                        //sx to dx indietro
+
+                        int newQuery = Integer.parseInt(pokeQuery);
+
+                        if (newQuery>1) {
+                            newQuery--;
+                           startSearch(newQuery);
+                        }
+                        else{
+                            Log.d("TEV1", "onTouchEvent:too low ");
+                        }
+                    }else{
+
+                        //dx to sx avanti
+                        int newQuery = Integer.parseInt(pokeQuery);
+
+                        if (newQuery<R.string.pokemonCount) {
+                            newQuery++;
+                            startSearch(newQuery);
+
+                        }
+                        else{
+                            Log.d("TEV1", "onTouchEvent:too high ");
+                        }
+                    }
+                }
+
+                    break;
+
+            default:
+                break;
+
+        }
+        return super.onTouchEvent(event);
+    }
 }
 //TODO expand and layout
