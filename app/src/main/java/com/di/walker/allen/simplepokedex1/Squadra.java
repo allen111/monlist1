@@ -9,6 +9,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ProgressBar;
@@ -32,16 +35,41 @@ public class Squadra extends AppCompatActivity  implements SquadListAdapter.OnSq
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_squadra);
+        Toolbar toolbar =(Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
 
-        sharedPreferences = getSharedPreferences("PokeSquad", Context.MODE_PRIVATE);
-        //editor= sharedPreferences.edit();
         squadItems= new ArrayList<SquadItem>();
         bindViews();
         bindList();
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater =getMenuInflater();
+        inflater.inflate(R.menu.squad_menu,menu);
+
+
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        if(item.getItemId()==R.id.clear_all){
+            editor= sharedPreferences.edit();
+            editor.clear();
+            editor.apply();
+            bindList();
+            tooltip.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+            return true;
+        }
+        return false;
+    }
+
 
     private void bindRec() {
 
@@ -62,9 +90,12 @@ public class Squadra extends AppCompatActivity  implements SquadListAdapter.OnSq
     }
 
     private void bindList() {
+        Log.d("CLR2", "bindList: ");
         progressBar.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
+        sharedPreferences = getSharedPreferences("PokeSquad", Context.MODE_PRIVATE);
         Map<String,?> map =sharedPreferences.getAll();
+
         for (Map.Entry<String, ?> entry : map.entrySet()){
             squadItems.add(new SquadItem(entry.getKey(),(Integer) entry.getValue()));
         }
@@ -85,14 +116,13 @@ public class Squadra extends AppCompatActivity  implements SquadListAdapter.OnSq
 
 
     @Override
-    public void OnCardClicked(View view, int poke_num) {
+    public void OnCardClicked(View view, int poke_num,int position) {
         Log.d("CL2", "OnCardClicked: "+poke_num);
         Intent i= new Intent(this,DetailActivity.class);
-
-
         i.putExtra("PokeNum", "" + poke_num);
+        i.putExtra("squad",true);
+        i.putExtra("pos",position);
         startActivity(i);
     }
 }
-//TODO:  fix detailActivity swipe ..
-// TODO: remove a poke and clear all
+// TODO: remove a poke 

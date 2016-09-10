@@ -223,6 +223,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
             int pos = position + 1;
             i.putExtra("PokeNum", "" + pos);
         }
+        i.putExtra("squad",false);
 
         startActivity(i);
 

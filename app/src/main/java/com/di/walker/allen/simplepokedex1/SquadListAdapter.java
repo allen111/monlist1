@@ -29,7 +29,7 @@ public class SquadListAdapter extends RecyclerView.Adapter<SquadListAdapter.Squa
     }
 
     @Override
-    public void onBindViewHolder(SquadViewHolder holder, int position) {
+    public void onBindViewHolder(SquadViewHolder holder, final int position) {
 
         holder.pk_name.setText(squadItems.get(position).getName());
         int num=squadItems.get(position).getNum();
@@ -44,7 +44,7 @@ public class SquadListAdapter extends RecyclerView.Adapter<SquadListAdapter.Squa
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onSquadCardClikListner.OnCardClicked(v,f_num);
+                onSquadCardClikListner.OnCardClicked(v,f_num,position);
             }
         });
 
@@ -84,7 +84,7 @@ public class SquadListAdapter extends RecyclerView.Adapter<SquadListAdapter.Squa
     }
 
     public interface  OnSquadCardClikListner {
-        void OnCardClicked(View view,int poke_num);
+        void OnCardClicked(View view,int poke_num,int position);
     }
 
 

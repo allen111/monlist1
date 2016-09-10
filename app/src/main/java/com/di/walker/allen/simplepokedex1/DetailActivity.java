@@ -2,6 +2,7 @@ package com.di.walker.allen.simplepokedex1;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -29,6 +30,9 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.IOException;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
@@ -56,6 +60,10 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
     private TextView pkmDefense;
     private TextView pkmSpeed;
     private TextView pkmTypes;
+    private Boolean squadMode;
+    private SharedPreferences sharedPreferences;
+    private ArrayList<SquadItem> squadItems;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,12 +77,31 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Bundle extras = getIntent().getExtras();
+        squadMode = extras.getBoolean("squad");
+
         pokeQuery = extras.getString("PokeNum");
-        Log.d("DEB1", "onCreate: " + pokeQuery);
+        Log.d("DMO", "onCreate:normal mode " + pokeQuery);
         bindViews();
+
+
         istance = buildPokeapiInstance();
         startSearch(Integer.parseInt(pokeQuery));
+        if (squadMode) {
+            position = extras.getInt("pos");
+            sharedPreferences = getSharedPreferences("PokeSquad", Context.MODE_PRIVATE);
+            bindList();
+        }
 
+    }
+
+    private void bindList() {
+        squadItems = new ArrayList<SquadItem>();
+        Map<String, ?> map = sharedPreferences.getAll();
+        for (Map.Entry<String, ?> entry : map.entrySet()) {
+            squadItems.add(new SquadItem(entry.getKey(), (Integer) entry.getValue()));
+        }
+
+        Collections.sort(squadItems);
     }
 
     private void bindViews() {
@@ -122,7 +149,7 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
         }
         progBar.setVisibility(View.VISIBLE);
         pkm_det.setVisibility(View.GONE);
-        pokeQuery=""+pokequery;
+        pokeQuery = "" + pokequery;
 
         try {
             istance.searchForPokemon(pokeQuery).enqueue(this);
@@ -143,6 +170,7 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
         int num = result.getId();
         // visualizzo le statistiche
         pokeName.setText(result.getName() + " #" + num);
+        setTitle(result.getName());
         pkmWeight.setText("Weight: " + result.getWeight());
         for (Stat s : result.getStats()) {
             switch (s.getStat().getName()) {
@@ -164,23 +192,22 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
 
         String types = "";
 
-        String type="null";
-        Type t1=null;
+        String type = "null";
+        Type t1 = null;
         for (Type t : result.getTypes()) {
-            types = t.getType().getName()+ " " +types  ;
-            t1=t;
+            types = t.getType().getName() + " " + types;
+            t1 = t;
         }
-        type=t1.getType().getName();
-        types="Types: "+types;
+        type = t1.getType().getName();
+        types = "Types: " + types;
         pkmTypes.setText(types);
-        Log.d("TYP", "onResponse: "+type);
+        Log.d("TYP", "onResponse: " + type);
 
         progBar.setVisibility(View.GONE);
 
         pkm_det.setVisibility(View.VISIBLE);
 
         Picasso.with(this).load(result.getSprites().getFrontDefault()).into(pokeImg);
-
 
 
     }
@@ -233,13 +260,14 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
                 activeNetwork.isConnectedOrConnecting();
     }
 
-    float x1,x2;
+    float x1, x2;
     final int MIN_DISTANCE = 150;
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = MotionEventCompat.getActionMasked(event);
 
-        switch(action) {
+        switch (action) {
             case MotionEvent.ACTION_DOWN:
                 x1 = event.getX();
 
@@ -248,40 +276,57 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
                 x2 = event.getX();
 
                 float deltaX = x2 - x1;
-                deltaX=Math.abs(deltaX);
+                deltaX = Math.abs(deltaX);
 
-                if (deltaX >MIN_DISTANCE){
+                if (deltaX > MIN_DISTANCE) {
 
-                    if(x1<x2){
+                    if (x1 < x2) {
 
                         //sx to dx indietro
+                        if (squadMode) {
+                            if (position > 0) {
+                                position--;
+                                int s_newQuery = squadItems.get(position).getNum();
+                                startSearch(s_newQuery);
+                            }
 
-                        int newQuery = Integer.parseInt(pokeQuery);
+                        } else {
+                            int newQuery = Integer.parseInt(pokeQuery);
 
-                        if (newQuery>1) {
-                            newQuery--;
-                           startSearch(newQuery);
+                            if (newQuery > 1) {
+                                newQuery--;
+                                startSearch(newQuery);
+                            } else {
+                                Log.d("TEV1", "onTouchEvent:too low ");
+                            }
                         }
-                        else{
-                            Log.d("TEV1", "onTouchEvent:too low ");
-                        }
-                    }else{
+                    } else {
 
                         //dx to sx avanti
-                        int newQuery = Integer.parseInt(pokeQuery);
 
-                        if (newQuery<R.string.pokemonCount) {
-                            newQuery++;
-                            startSearch(newQuery);
+                        if (squadMode) {
+                            if (position < squadItems.size()-1) {
+                                position++;
+                                int s_newQuery = squadItems.get(position).getNum();
+                                startSearch(s_newQuery);
+                            }
+                        } else {
 
-                        }
-                        else{
-                            Log.d("TEV1", "onTouchEvent:too high ");
+
+                            int newQuery = Integer.parseInt(pokeQuery);
+
+                            if (newQuery < R.string.pokemonCount) {
+                                newQuery++;
+                                startSearch(newQuery);
+
+                            } else {
+                                Log.d("TEV1", "onTouchEvent:too high ");
+                            }
                         }
                     }
                 }
 
-                    break;
+                break;
 
             default:
                 break;
