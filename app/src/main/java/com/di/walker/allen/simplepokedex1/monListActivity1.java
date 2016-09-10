@@ -60,9 +60,11 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mon_list1);
+
         SharedPreferences sharedPreferences = getSharedPreferences("PokeSquad", Context.MODE_PRIVATE);
         editor= sharedPreferences.edit();
         bindViews();
+
     }
 
     @Override
@@ -111,6 +113,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
                 Log.d("SP1", "onSwiped: "+result.get(viewHolder.getAdapterPosition()).getName());
                 recView.getAdapter().notifyItemChanged(viewHolder.getAdapterPosition());
                 editor.putInt(result.get(viewHolder.getAdapterPosition()).getName(),viewHolder.getAdapterPosition()+1);
+
                 editor.commit();
 //cicla ovunque
 //                Map<String,?> a= sharedPreferences.getAll();
@@ -342,7 +345,9 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 }
 
 
+
+
+// TODO for squad  maybe bar low to undo?
+// TODO shake
 // TODO: comment pls
 // TODO  minor check perche non compaiono quando tastiera up serached
-// TODO for squad  maybe bar low to undo? activity retrive and display
-// TODO shake

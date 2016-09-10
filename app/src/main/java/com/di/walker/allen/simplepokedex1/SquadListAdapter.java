@@ -55,6 +55,9 @@ public class SquadListAdapter extends RecyclerView.Adapter<SquadListAdapter.Squa
     public int getItemCount() {
         return squadItems.size();
     }
+    public void setOnSquadCardClikListener(OnSquadCardClikListner onSquadCardClikListner){
+        this.onSquadCardClikListner=onSquadCardClikListner;
+    }
 
 
 
@@ -81,7 +84,7 @@ public class SquadListAdapter extends RecyclerView.Adapter<SquadListAdapter.Squa
     }
 
     public interface  OnSquadCardClikListner {
-        void OnCardClicked(View view,int position);
+        void OnCardClicked(View view,int poke_num);
     }
 
 

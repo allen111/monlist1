@@ -18,7 +18,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".monListActivity1"></activity>
+        <activity android:name=".monListActivity1"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".DetailActivity"
             android:label="@string/title_activity_detail"
@@ -28,7 +29,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.di.walker.allen.simplepokedex1.monListActivity1" />
         </activity>
-        <activity android:name=".Squadra"></activity>
+        <activity android:name=".Squadra"
+            android:parentActivityName=".MainActivity"
+           />
     </application>
 
 </manifest>
