@@ -1,7 +1,7 @@
 package com.di.walker.allen.simplepokedex1;
 
 
-public class SquadItem {
+public class SquadItem implements Comparable<SquadItem>{
     private String name;
     private int num;
 
@@ -24,5 +24,10 @@ public class SquadItem {
 
     public void setNum(int num) {
         this.num = num;
+    }
+
+    @Override
+    public int compareTo(SquadItem another) {
+        return this.getNum()-another.getNum();
     }
 }

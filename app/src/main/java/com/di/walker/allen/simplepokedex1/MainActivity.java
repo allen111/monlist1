@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bindViews();
 
         gotoButton.setOnClickListener(this);
+        SquadButton.setOnClickListener(this);
     }
 
 

@@ -53,7 +53,6 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     private boolean searching = false;
     private android.widget.SearchView searchView;
     private TextView tapD;
-    private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
 
@@ -61,8 +60,8 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mon_list1);
-        sharedPreferences=getSharedPreferences("PokeSquad",Context.MODE_PRIVATE);
-        editor=sharedPreferences.edit();
+        SharedPreferences sharedPreferences = getSharedPreferences("PokeSquad", Context.MODE_PRIVATE);
+        editor= sharedPreferences.edit();
         bindViews();
     }
 
@@ -91,8 +90,10 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         }
         progressBar = (ProgressBar) findViewById(R.id.progressList);
         recView.setHasFixedSize(true);
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recView.setLayoutManager(layoutManager);
+
         initSwipe();
         loadJson();
     }

@@ -9,4 +9,19 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.di.walker.allen.simplepokedex1.Squadra">
 
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/squadRecView"
+        android:scrollbars="vertical"
+        android:visibility="gone"
+        />
+    <ProgressBar
+        android:id="@+id/progreSquadList"
+        android:layout_gravity="center"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_margin="100dp"
+        style="?android:attr/progressBarStyleLarge"/>
+
 </RelativeLayout>
