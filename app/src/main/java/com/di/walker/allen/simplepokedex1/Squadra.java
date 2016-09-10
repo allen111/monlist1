@@ -1,8 +1,10 @@
 package com.di.walker.allen.simplepokedex1;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,6 +30,7 @@ public class Squadra extends AppCompatActivity  implements SquadListAdapter.OnSq
     private ProgressBar progressBar;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
+
 
 
     @Override
@@ -59,12 +62,45 @@ public class Squadra extends AppCompatActivity  implements SquadListAdapter.OnSq
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if(item.getItemId()==R.id.clear_all){
-            editor= sharedPreferences.edit();
-            editor.clear();
-            editor.apply();
-            bindList();
-            tooltip.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
+
+            AlertDialog.Builder builder =new AlertDialog.Builder(this);
+            builder.setTitle("Clear all").setCancelable(true).setMessage("vuoi cancellare la tua squadra?");
+
+            builder.setPositiveButton("clear", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    editor= sharedPreferences.edit();
+                    editor.clear();
+                    editor.apply();
+                    tooltip.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+
+                }
+            });
+            builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Log.d("DI1", "onClick: cancel");
+                }
+            });
+
+
+            AlertDialog dialog=builder.create();
+            dialog.show();
+
+
+
+
+
+
+
+
+
+
+
+
+
             return true;
         }
         return false;
@@ -125,4 +161,4 @@ public class Squadra extends AppCompatActivity  implements SquadListAdapter.OnSq
         startActivity(i);
     }
 }
-// TODO: remove a poke 
+// TODO: remove a poke
