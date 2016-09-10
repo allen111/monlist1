@@ -1,7 +1,7 @@
 package com.di.walker.allen.simplepokedex1;
 
 
-import android.content.Context;
+
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -38,16 +38,16 @@ public class PokeListAdapter extends RecyclerView.Adapter<PokeListAdapter.ViewHo
         String url = pokeList.get(position).getUrl();
         String[] splitted = url.split("/");
         String num = splitted[splitted.length - 1];
-        holder.pk_num.setText("#: " +num);
+        holder.pk_num.setText(String.format("#: %s", num));
 
-        String mDrawableName = "icon_"+num/*+".png"*/;
+        String drawableName = "icon_"+num;
 
-        int resID =  getId(mDrawableName,R.drawable.class);
-        Log.d("img2", "onBindViewHolder: "+resID);
+        int resID =  getId(drawableName,R.drawable.class);
+
         holder.pk_icon.setImageResource(resID);
 
         holder.cardView.setOnClickListener(new View.OnClickListener(){
-
+//TODO maybe num like SquadListAdapter?
             @Override
             public void onClick(View v) {
                 onCardClickListner.OnCardClicked(v,position);
@@ -62,7 +62,7 @@ public class PokeListAdapter extends RecyclerView.Adapter<PokeListAdapter.ViewHo
     public void setOnCardClickListner(OnCardClikListner onCardClickListner){
         this.onCardClickListner =onCardClickListner;
     }
-
+/////////////////////////////////////////////////////////////////////////////
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView pk_name,pk_num,pk_url;
         CardView cardView;
@@ -80,6 +80,7 @@ public class PokeListAdapter extends RecyclerView.Adapter<PokeListAdapter.ViewHo
 
 
     }
+    ////////////////////////////////////////////////////////////////////////////////
     public interface  OnCardClikListner {
         void OnCardClicked(View view,int position);
     }
