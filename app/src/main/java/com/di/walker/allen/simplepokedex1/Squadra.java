@@ -16,7 +16,6 @@ import java.util.Map;
 public class Squadra extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ArrayList<SquadItem> squadItems;
-    private SquadListAdapter squadListAdapter;
     private ProgressBar progressBar;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -39,7 +38,7 @@ public class Squadra extends AppCompatActivity {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
-        squadListAdapter = new SquadListAdapter(squadItems);
+        SquadListAdapter squadListAdapter = new SquadListAdapter(squadItems);
         recyclerView.setAdapter(squadListAdapter);
 
         progressBar.setVisibility(View.GONE);
