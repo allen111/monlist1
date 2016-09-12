@@ -169,39 +169,38 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
         }
         int num = result.getId();
         // visualizzo le statistiche
-        pokeName.setText(result.getName() + " #" + num);
+        pokeName.setText(String.format("%s #%d", result.getName(), num));
         setTitle(result.getName());
-        pkmWeight.setText("Weight: " + result.getWeight());
+        pkmWeight.setText(String.format("Weight: %d", result.getWeight()));
         for (Stat s : result.getStats()) {
             switch (s.getStat().getName()) {
                 case "hp":
-                    pkmHp.setText("HP: " + s.getBaseStat());
+                    pkmHp.setText(String.format("HP: %d", s.getBaseStat()));
                     break;
                 case "attack":
-                    pkmAttack.setText("Attack: " + s.getBaseStat());
+                    pkmAttack.setText(String.format("Attack: %d", s.getBaseStat()));
                     break;
                 case "defense":
-                    pkmDefense.setText("Defense: " + s.getBaseStat());
+                    pkmDefense.setText(String.format("Defense: %d", s.getBaseStat()));
                     break;
 
                 case "speed":
-                    pkmSpeed.setText("Speed: " + s.getBaseStat());
+                    pkmSpeed.setText(String.format("Speed: %d", s.getBaseStat()));
                     break;
             }
         }
 
         String types = "";
 
-        String type = "null";
-        Type t1 = null;
+
         for (Type t : result.getTypes()) {
             types = t.getType().getName() + " " + types;
-            t1 = t;
+
         }
-        type = t1.getType().getName();
+
         types = "Types: " + types;
         pkmTypes.setText(types);
-        Log.d("TYP", "onResponse: " + type);
+
 
         progBar.setVisibility(View.GONE);
 
@@ -305,7 +304,7 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
                         //dx to sx avanti
 
                         if (squadMode) {
-                            if (position < squadItems.size()-1) {
+                            if (position < squadItems.size() - 1) {
                                 position++;
                                 int s_newQuery = squadItems.get(position).getNum();
                                 startSearch(s_newQuery);

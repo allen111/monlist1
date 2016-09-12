@@ -32,7 +32,7 @@ import com.di.walker.allen.simplepokedex1.list.Result;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
@@ -56,6 +56,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     private boolean searching = false;
     private android.widget.SearchView searchView;
     private TextView tapD;
+    SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private TextView piu;
 
@@ -65,8 +66,9 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mon_list1);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("PokeSquad", Context.MODE_PRIVATE);
-        editor = sharedPreferences.edit();
+
+        sharedPreferences = getSharedPreferences("PokeSquad", Context.MODE_PRIVATE);
+
         bindViews();
 
     }
@@ -122,11 +124,12 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
                 Toast.makeText(getApplicationContext(), toast, Toast.LENGTH_SHORT).show();
 
                 recView.getAdapter().notifyItemChanged(viewHolder.getAdapterPosition());
+                editor = sharedPreferences.edit();
 
 
                 editor.putInt(result.get(viewHolder.getAdapterPosition()).getName(), viewHolder.getAdapterPosition() + 1);
 
-                editor.commit();
+                editor.apply();
 
 
             }
@@ -368,4 +371,3 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 
 // TODO shake
 // TODO: comment pls
-// TODO  minor check perche non compaiono quando tastiera up serached
