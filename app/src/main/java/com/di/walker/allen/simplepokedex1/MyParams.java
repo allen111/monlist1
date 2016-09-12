@@ -4,7 +4,7 @@ import com.di.walker.allen.simplepokedex1.list.Result;
 
 import java.util.ArrayList;
 
-
+//parametri della ricerca
 public class MyParams {
     public ArrayList<Result> rLis;
     public String query;
