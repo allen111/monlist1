@@ -1,50 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.di.walker.allen.simplepokedex1.MainActivity"
-    android:weightSum="1">
+    android:layout_height="match_parent">
 
-
-
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView"
-        android:src="@drawable/icon"
-        android:layout_marginBottom="20dp" />
-
-    <Button
+    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/Squad"
-        android:id="@+id/squadButton"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:weightSum="1"
+
+        tools:context="com.di.walker.allen.simplepokedex1.MainActivity">
 
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/icon" />
 
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-
-        />
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/lista_pokemon"
-        android:id="@+id/listButton"
-
-
-
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-
-         />
+        <Button
+            android:id="@+id/squadButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
 
 
+            android:layout_marginRight="16dp"
+            android:text="@string/Squad"
 
-</LinearLayout>
+            />
+
+        <Button
+            android:id="@+id/listButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+
+
+            android:layout_marginRight="16dp"
+            android:text="@string/lista_pokemon"
+
+            />
+
+
+    </LinearLayout>
+</ScrollView>

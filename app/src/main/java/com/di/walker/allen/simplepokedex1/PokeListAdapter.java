@@ -47,7 +47,7 @@ public class PokeListAdapter extends RecyclerView.Adapter<PokeListAdapter.ViewHo
         holder.pk_icon.setImageResource(resID);
 
         holder.cardView.setOnClickListener(new View.OnClickListener(){
-//TODO maybe num like SquadListAdapter?
+
             @Override
             public void onClick(View v) {
                 onCardClickListner.OnCardClicked(v,position);

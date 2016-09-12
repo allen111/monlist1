@@ -119,15 +119,22 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
                 Log.d("SWP", "onSwiped: " + direction);
                 Log.d("SP1", "onSwiped: " + viewHolder.getAdapterPosition()); //+1
                 Log.d("SP1", "onSwiped: " + result.get(viewHolder.getAdapterPosition()).getName());
-                String c = result.get(viewHolder.getAdapterPosition()).getName();
-                String toast = "hai aggiunto " + c + " alla tua squadra";
-                Toast.makeText(getApplicationContext(), toast, Toast.LENGTH_SHORT).show();
 
-                recView.getAdapter().notifyItemChanged(viewHolder.getAdapterPosition());
+
+
+
                 editor = sharedPreferences.edit();
+                String name =result.get(viewHolder.getAdapterPosition()).getName();
+                if(!sharedPreferences.contains(name)){
+                    String toast = "hai aggiunto " + name + " alla tua squadra";
+                    Toast.makeText(getApplicationContext(), toast, Toast.LENGTH_SHORT).show();
+                    editor.putInt(name, viewHolder.getAdapterPosition() + 1);
+                }else{
+                    String toast = "hai gia " + name + " nella tua squadra";
+                    Toast.makeText(getApplicationContext(), toast, Toast.LENGTH_SHORT).show();
+                }
+                recView.getAdapter().notifyItemChanged(viewHolder.getAdapterPosition());
 
-
-                editor.putInt(result.get(viewHolder.getAdapterPosition()).getName(), viewHolder.getAdapterPosition() + 1);
 
                 editor.apply();
 
@@ -368,6 +375,3 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 }
 
 
-
-// TODO shake
-// TODO: comment pls

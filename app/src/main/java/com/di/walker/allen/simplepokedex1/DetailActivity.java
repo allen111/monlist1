@@ -334,4 +334,3 @@ public class DetailActivity extends AppCompatActivity implements Callback<Pokemo
         return super.onTouchEvent(event);
     }
 }
-//TODO expand and layout
