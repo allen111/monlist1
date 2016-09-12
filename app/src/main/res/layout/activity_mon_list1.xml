@@ -36,5 +36,15 @@
         android:id="@+id/tapD"
         android:background="@color/colorAccent"
         />
+    <TextView
+        android:layout_width="match_parent"
+        android:textSize="70sp"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:gravity="center_vertical|end"
+        android:text="+"
+        android:id="@+id/piu"
+
+        android:visibility="gone"/>
 
 </RelativeLayout>

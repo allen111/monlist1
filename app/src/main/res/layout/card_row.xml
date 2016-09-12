@@ -53,5 +53,13 @@
 
             android:layout_marginLeft="100dp"
             android:layout_alignParentEnd="true" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAlignment="viewEnd"
+            android:text="+"
+            android:id="@+id/piu"
+            android:background="@android:color/holo_green_dark"
+            android:visibility="gone"/>
     </RelativeLayout>
 </android.support.v7.widget.CardView>

@@ -54,6 +54,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     private android.widget.SearchView searchView;
     private TextView tapD;
     private SharedPreferences.Editor editor;
+    private TextView piu;
 
 
     @Override
@@ -87,6 +88,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         //qui istanzio le view
         recView = (RecyclerView) findViewById(R.id.recView);
         tapD = (TextView) findViewById(R.id.tapD);
+        piu = (TextView) findViewById(R.id.piu);
         if (tapD != null) {
             tapD.setOnClickListener(this);
         }
@@ -111,16 +113,12 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
                 Log.d("SWP", "onSwiped: "+direction);
                 Log.d("SP1", "onSwiped: "+viewHolder.getAdapterPosition()); //+1
                 Log.d("SP1", "onSwiped: "+result.get(viewHolder.getAdapterPosition()).getName());
+
                 recView.getAdapter().notifyItemChanged(viewHolder.getAdapterPosition());
+
                 editor.putInt(result.get(viewHolder.getAdapterPosition()).getName(),viewHolder.getAdapterPosition()+1);
 
                 editor.commit();
-//cicla ovunque
-//                Map<String,?> a= sharedPreferences.getAll();
-//
-//                for (Map.Entry<String, ?> entry : a.entrySet()){
-//                    Log.d("SP!", "onSwiped: "+entry.getKey()+entry.getValue());
-//                }
 
 
             }
@@ -128,18 +126,28 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
                 if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
                     View itemView = viewHolder.itemView;
+                        piu.setY(itemView.getTop());
+                        piu.setHeight(itemView.getHeight());
+                        piu.setWidth(itemView.getWidth());
+                        if(isCurrentlyActive){
+                            Paint p = new Paint();
+                            p.setColor(Color.GREEN);
 
-                    Paint p = new Paint();
-                    p.setColor(Color.RED);
 
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             c.drawRoundRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
                                     (float) itemView.getRight(), (float) itemView.getBottom(),10.0f,10.0f, p);
+
+                            } else {
+                                c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
+                                        (float) itemView.getRight(), (float) itemView.getBottom(), p);
+                            }
+                            piu.setVisibility(View.VISIBLE);
+
                         }else{
-                            c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
-                                    (float) itemView.getRight(), (float) itemView.getBottom(), p);
+                            piu.setVisibility(View.GONE);
                         }
+
                     }
 
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
