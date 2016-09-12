@@ -15,4 +15,6 @@
     <string name="tooltipSquad">aggiungi pokemon alla squadra con uno swipe</string>
     <string name="clear_all">Clear all</string>
     <string name="piu">+</string>
+    <string name="Squad">vedi la squadra</string>
+    <string name="lista_pokemon">Lista Pokemon</string>
 </resources>

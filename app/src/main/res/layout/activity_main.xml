@@ -14,38 +14,35 @@
 
 
     <ImageView
-        android:layout_width="1233033dp"
-        android:layout_height="352dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/imageView"
-        android:layout_above="@+id/listButton"
-        android:layout_centerHorizontal="true"
-        android:src="@color/accent_material_light" />
+        android:src="@drawable/icon"
+        android:layout_marginBottom="20dp" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="vedi la squadra"
+        android:text="@string/Squad"
         android:id="@+id/squadButton"
 
 
 
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+
         />
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="goto list"
+        android:text="@string/lista_pokemon"
         android:id="@+id/listButton"
 
 
 
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+
          />
 
 
