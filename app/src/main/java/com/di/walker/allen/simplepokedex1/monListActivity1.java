@@ -116,12 +116,6 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                Log.d("SWP", "onSwiped: " + direction);
-                Log.d("SP1", "onSwiped: " + viewHolder.getAdapterPosition()); //+1
-                Log.d("SP1", "onSwiped: " + result.get(viewHolder.getAdapterPosition()).getName());
-
-
-
 
                 editor = sharedPreferences.edit();
                 String name =result.get(viewHolder.getAdapterPosition()).getName();
@@ -204,7 +198,6 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
     @Override
     public void onResponse(Call<PokeList> call, Response<PokeList> response) {
 
-        Log.d("deb3", "onCreate: onRes" + response.code());
         if (response.code() > 299) {
             Toast.makeText(this, "codice errore" + response.code(), Toast.LENGTH_SHORT).show();
             return;

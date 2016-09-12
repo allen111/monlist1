@@ -114,7 +114,8 @@ public class Squadra extends AppCompatActivity  implements SquadListAdapter.OnSq
     }
 
     private void bindList() {
-        Log.d("CLR2", "bindList: ");
+
+
         progressBar.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
         sharedPreferences = getSharedPreferences("PokeSquad", Context.MODE_PRIVATE);
