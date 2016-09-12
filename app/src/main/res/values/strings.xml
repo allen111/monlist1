@@ -14,4 +14,5 @@
     <string name="tap_to_retry">tap to retry</string>
     <string name="tooltipSquad">aggiungi pokemon alla squadra con uno swipe</string>
     <string name="clear_all">Clear all</string>
+    <string name="piu">+</string>
 </resources>

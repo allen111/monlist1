@@ -14,7 +14,8 @@ import java.util.ArrayList;
 
 public class SquadListAdapter extends RecyclerView.Adapter<SquadListAdapter.SquadViewHolder> {
     private ArrayList<SquadItem> squadItems;
-    OnSquadCardClikListner onSquadCardClikListner;
+    OnSquadCardClickListener onSquadCardClickListener;
+    OnSquadCardLongClickListener onSquadCardLongClickListener;
 
     public SquadListAdapter(ArrayList<SquadItem> squadItems){
         this.squadItems=squadItems;
@@ -44,7 +45,14 @@ public class SquadListAdapter extends RecyclerView.Adapter<SquadListAdapter.Squa
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onSquadCardClikListner.OnCardClicked(v,f_num,position);
+                onSquadCardClickListener.OnCardClicked(v,f_num,position);
+            }
+        });
+        holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                onSquadCardLongClickListener.OnCardLongClicked(v,f_num,position);
+                return true;
             }
         });
 
@@ -55,16 +63,12 @@ public class SquadListAdapter extends RecyclerView.Adapter<SquadListAdapter.Squa
     public int getItemCount() {
         return squadItems.size();
     }
-    public void setOnSquadCardClikListener(OnSquadCardClikListner onSquadCardClikListner){
-        this.onSquadCardClikListner=onSquadCardClikListner;
+    public void setOnSquadCardClickListener(OnSquadCardClickListener onSquadCardClickListener){
+        this.onSquadCardClickListener = onSquadCardClickListener;
     }
-
-
-
-
-
-
-
+    public void setOnSquadCardLongClikListener(OnSquadCardLongClickListener onSquadCardLongClikListener){
+        this.onSquadCardLongClickListener =onSquadCardLongClikListener;
+    }
 
 
 
@@ -83,10 +87,13 @@ public class SquadListAdapter extends RecyclerView.Adapter<SquadListAdapter.Squa
         }
     }
 
-    public interface  OnSquadCardClikListner {
+    public interface OnSquadCardClickListener {
         void OnCardClicked(View view,int poke_num,int position);
     }
 
+    public interface OnSquadCardLongClickListener {
+        void OnCardLongClicked(View view,int poke_num,int position);
+    }
 
 
     public static int getId(String resourceName, Class<?> c) {

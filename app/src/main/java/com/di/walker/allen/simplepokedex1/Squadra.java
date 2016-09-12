@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -23,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 
-public class Squadra extends AppCompatActivity  implements SquadListAdapter.OnSquadCardClikListner{
+public class Squadra extends AppCompatActivity  implements SquadListAdapter.OnSquadCardClickListener, SquadListAdapter.OnSquadCardLongClickListener {
     private RecyclerView recyclerView;
     private TextView tooltip;
     private ArrayList<SquadItem> squadItems;
@@ -89,18 +88,6 @@ public class Squadra extends AppCompatActivity  implements SquadListAdapter.OnSq
             AlertDialog dialog=builder.create();
             dialog.show();
 
-
-
-
-
-
-
-
-
-
-
-
-
             return true;
         }
         return false;
@@ -113,7 +100,8 @@ public class Squadra extends AppCompatActivity  implements SquadListAdapter.OnSq
         recyclerView.setLayoutManager(layoutManager);
         SquadListAdapter squadListAdapter = new SquadListAdapter(squadItems);
         recyclerView.setAdapter(squadListAdapter);
-        squadListAdapter.setOnSquadCardClikListener(this);
+        squadListAdapter.setOnSquadCardClickListener(this);
+        squadListAdapter.setOnSquadCardLongClikListener(this);
 
         progressBar.setVisibility(View.GONE);
 
@@ -160,5 +148,37 @@ public class Squadra extends AppCompatActivity  implements SquadListAdapter.OnSq
         i.putExtra("pos",position);
         startActivity(i);
     }
+
+    @Override
+    public void OnCardLongClicked(View view, int poke_num, final int position) {
+
+
+        AlertDialog.Builder builder =new AlertDialog.Builder(this);
+        builder.setTitle("cancella").setCancelable(true).setMessage("vuoi cancellare questo pokemon dalla squadra?");
+
+        builder.setPositiveButton("Cancella", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String name= squadItems.get(position).getName();
+                squadItems.remove(position);
+                editor= sharedPreferences.edit();
+                editor.remove(name);
+                editor.apply();
+                bindRec();
+
+
+            }
+        });
+        builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.d("DI1", "onClick: cancel");
+            }
+        });
+
+
+        AlertDialog dialog=builder.create();
+        dialog.show();
+
+    }
 }
-// TODO: remove a poke

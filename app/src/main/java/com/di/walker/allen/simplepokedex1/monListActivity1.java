@@ -25,13 +25,16 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.di.walker.allen.simplepokedex1.list.PokeList;
 import com.di.walker.allen.simplepokedex1.list.Result;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
@@ -63,7 +66,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         setContentView(R.layout.activity_mon_list1);
 
         SharedPreferences sharedPreferences = getSharedPreferences("PokeSquad", Context.MODE_PRIVATE);
-        editor= sharedPreferences.edit();
+        editor = sharedPreferences.edit();
         bindViews();
 
     }
@@ -101,8 +104,9 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
         initSwipe();
         loadJson();
     }
-    private void initSwipe(){
-        ItemTouchHelper.SimpleCallback SimpleitemTouchHelper = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT ) {
+
+    private void initSwipe() {
+        ItemTouchHelper.SimpleCallback SimpleitemTouchHelper = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
@@ -110,54 +114,61 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                Log.d("SWP", "onSwiped: "+direction);
-                Log.d("SP1", "onSwiped: "+viewHolder.getAdapterPosition()); //+1
-                Log.d("SP1", "onSwiped: "+result.get(viewHolder.getAdapterPosition()).getName());
+                Log.d("SWP", "onSwiped: " + direction);
+                Log.d("SP1", "onSwiped: " + viewHolder.getAdapterPosition()); //+1
+                Log.d("SP1", "onSwiped: " + result.get(viewHolder.getAdapterPosition()).getName());
+                String c = result.get(viewHolder.getAdapterPosition()).getName();
+                String toast = "hai aggiunto " + c + " alla tua squadra";
+                Toast.makeText(getApplicationContext(), toast, Toast.LENGTH_SHORT).show();
 
                 recView.getAdapter().notifyItemChanged(viewHolder.getAdapterPosition());
 
-                editor.putInt(result.get(viewHolder.getAdapterPosition()).getName(),viewHolder.getAdapterPosition()+1);
+
+                editor.putInt(result.get(viewHolder.getAdapterPosition()).getName(), viewHolder.getAdapterPosition() + 1);
 
                 editor.commit();
 
 
             }
+
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
                 if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
                     View itemView = viewHolder.itemView;
-                        piu.setY(itemView.getTop());
-                        piu.setHeight(itemView.getHeight());
-                        piu.setWidth(itemView.getWidth());
-                        if(isCurrentlyActive){
-                            Paint p = new Paint();
-                            p.setColor(Color.GREEN);
+                    piu.setY(itemView.getTop());
+                    piu.setHeight(itemView.getHeight());
+                    piu.setWidth(itemView.getWidth());
+                    Paint p = new Paint();
+                    p.setColor(Color.GREEN);
 
 
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            c.drawRoundRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
-                                    (float) itemView.getRight(), (float) itemView.getBottom(),10.0f,10.0f, p);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        c.drawRoundRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
+                                (float) itemView.getRight(), (float) itemView.getBottom(), 10.0f, 10.0f, p);
 
-                            } else {
-                                c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
-                                        (float) itemView.getRight(), (float) itemView.getBottom(), p);
-                            }
-                            piu.setVisibility(View.VISIBLE);
+                    } else {
+                        c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
+                                (float) itemView.getRight(), (float) itemView.getBottom(), p);
+                    }
+                    if (isCurrentlyActive) {
 
-                        }else{
-                            piu.setVisibility(View.GONE);
-                        }
+                        piu.setVisibility(View.VISIBLE);
 
+                    } else {
+                        piu.setVisibility(View.GONE);
                     }
 
-                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
                 }
 
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+
         };
-        ItemTouchHelper ith= new ItemTouchHelper(SimpleitemTouchHelper);
+        ItemTouchHelper ith = new ItemTouchHelper(SimpleitemTouchHelper);
         ith.attachToRecyclerView(recView);
 
     }
+
     private void loadJson() {
         //istanzio la cache e il client delle cache
         File httpCacheDirectory = new File(monListActivity1.this.getCacheDir(), "responses");
@@ -231,7 +242,7 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
             int pos = position + 1;
             i.putExtra("PokeNum", "" + pos);
         }
-        i.putExtra("squad",false);
+        i.putExtra("squad", false);
 
         startActivity(i);
 
@@ -355,8 +366,6 @@ public class monListActivity1 extends AppCompatActivity implements Callback<Poke
 
 
 
-
-// TODO for squad  maybe bar low to undo?
 // TODO shake
 // TODO: comment pls
 // TODO  minor check perche non compaiono quando tastiera up serached
